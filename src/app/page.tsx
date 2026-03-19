@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence, useInView, useSpring, useMotionValue } from 'framer-motion';
 import Link from 'next/link';
 import { 
   ArrowRight, CheckCircle, Shield, Truck, Zap, Flame, 
@@ -9,6 +9,187 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useUIStore } from '@/lib/ui-store';
+
+// ============== 动画工具组件 ==============
+
+// 滚动视图触发动画组件
+function ScrollReveal({ 
+  children, 
+  delay = 0, 
+  direction = 'up',
+  distance = 50,
+  duration = 0.6,
+  once = true
+}: { 
+  children: React.ReactNode; 
+  delay?: number; 
+  direction?: 'up' | 'down' | 'left' | 'right';
+  distance?: number;
+  duration?: number;
+  once?: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once, margin: '-100px' });
+  
+  const directions = {
+    up: { y: distance, x: 0 },
+    down: { y: -distance, x: 0 },
+    left: { x: distance, y: 0 },
+    right: { x: -distance, y: 0 },
+  };
+  
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, ...directions[direction] }}
+      animate={isInView ? { opacity: 1, x: 0, y: 0 } : {}}
+      transition={{ duration, delay, ease: [0.25, 0.1, 0.25, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// 文字交错动画组件
+function SplitText({ 
+  text, 
+  className = '',
+  delay = 0,
+  stagger = 0.02
+}: { 
+  text: string; 
+  className?: string;
+  delay?: number;
+  stagger?: number;
+}) {
+  const words = text.split(' ');
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-50px' });
+  
+  return (
+    <span ref={ref} className={className}>
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ 
+            duration: 0.4, 
+            delay: delay + i * stagger,
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+          className="inline-block mr-[0.2em]"
+        >
+          {word}
+        </motion.span>
+      ))}
+    </span>
+  );
+}
+
+// 视差背景组件
+function ParallaxBackground({ 
+  children,
+  speed = 0.5 
+}: { 
+  children: React.ReactNode;
+  speed?: number;
+}) {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 1000], [0, 500 * speed]);
+  
+  return (
+    <motion.div style={{ y }} className="relative">
+      {children}
+    </motion.div>
+  );
+}
+
+// 浮动装饰元素
+function FloatingElement({ 
+  className = '',
+  delay = 0,
+  duration = 6,
+  direction = 'vertical'
+}: { 
+  className?: string;
+  delay?: number;
+  duration?: number;
+  direction?: 'vertical' | 'horizontal' | 'diagonal';
+}) {
+  const getAnimation = () => {
+    switch (direction) {
+      case 'vertical':
+        return { y: [0, -20, 0] };
+      case 'horizontal':
+        return { x: [0, 20, 0] };
+      case 'diagonal':
+        return { x: [0, 15, 0], y: [0, -15, 0] };
+    }
+  };
+  
+  return (
+    <motion.div
+      animate={getAnimation()}
+      transition={{ 
+        duration, 
+        repeat: Infinity, 
+        ease: 'easeInOut', 
+        delay 
+      }}
+      className={className}
+    />
+  );
+}
+
+// 缓动数字动画
+function CountUp({ 
+  value, 
+  suffix = '',
+  duration = 2000,
+  className = ''
+}: { 
+  value: number; 
+  suffix?: string;
+  duration?: number;
+  className?: string;
+}) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true });
+  
+  useEffect(() => {
+    if (!isInView) return;
+    
+    let start = 0;
+    const end = value;
+    const durationMs = duration;
+    const startTime = performance.now();
+    
+    const animate = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / durationMs, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      const current = Math.floor(easeOut * end);
+      
+      setCount(current);
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    
+    requestAnimationFrame(animate);
+  }, [isInView, value, duration]);
+  
+  return (
+    <span ref={ref} className={className}>
+      {count}{suffix}
+    </span>
+  );
+}
+
+// ============== 数据定义 ==============
 
 // Product Categories Data
 const categories = [
@@ -194,9 +375,10 @@ function AnimatedCounter({ value, suffix, label, labelZh, isZh }: { value: numbe
   );
 }
 
-// 3D Tilt Card Component
+// 3D Tilt Card Component with enhanced animation
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const [rotation, setRotation] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -213,6 +395,7 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
 
   const handleMouseLeave = () => {
     setRotation({ x: 0, y: 0 });
+    setIsHovered(false);
   };
 
   return (
@@ -222,11 +405,15 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
       style={{ perspective: 1000 }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseEnter={() => setIsHovered(true)}
     >
       <motion.div
         style={{
           rotateX: rotation.x,
           rotateY: rotation.y,
+        }}
+        animate={{
+          scale: isHovered ? 1.02 : 1,
         }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       >
@@ -299,145 +486,239 @@ function TestimonialCarousel() {
 
 export default function HomePage() {
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 500], [0, 150]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const heroY = useTransform(scrollY, [0, 800], [0, 200]);
+  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const isZh = useUIStore.getState().preferences.language === 'zh';
+
+  // 页面加载进度
+  const [isLoaded, setIsLoaded] = useState(false);
+  
+  useEffect(() => {
+    setTimeout(() => setIsLoaded(true), 100);
+  }, []);
 
   return (
     <div className="min-h-screen overflow-x-hidden">
-      {/* Hero Section with Parallax */}
+      {/* Hero Section with Enhanced Parallax */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Animated Background */}
+        {/* Animated Background Layers */}
         <div className="absolute inset-0 bg-gradient-to-br from-surface-50 via-white to-primary-50">
+          {/* Layer 1 - Slow parallax */}
+          <motion.div
+            className="absolute inset-0"
+            style={{ y: useTransform(scrollY, [0, 1000], [0, 100]) }}
+          >
+            <div className="absolute top-20 -left-20 w-[600px] h-[600px] bg-primary-200/30 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 -right-20 w-[500px] h-[500px] bg-accent-200/30 rounded-full blur-3xl" />
+          </motion.div>
+          
+          {/* Layer 2 - Medium parallax */}
+          <motion.div
+            className="absolute inset-0"
+            style={{ y: useTransform(scrollY, [0, 1000], [0, 200]) }}
+          >
+            <div className="absolute top-1/3 left-1/4 w-[400px] h-[400px] bg-primary-100/40 rounded-full blur-3xl" />
+          </motion.div>
+          
+          {/* Layer 3 - Fast parallax */}
           <motion.div
             className="absolute inset-0"
             style={{ y: heroY }}
           >
-            <div className="absolute top-20 -left-20 w-[600px] h-[600px] bg-primary-200/30 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 -right-20 w-[500px] h-[500px] bg-accent-200/30 rounded-full blur-3xl" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-100/20 rounded-full blur-3xl" />
           </motion.div>
           
-          {/* Floating Elements */}
-          <motion.div
-            animate={{ y: [0, -20, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-32 right-1/4 w-4 h-4 bg-primary-400/50 rounded-full"
+          {/* Floating Elements - 装饰性光点 */}
+          <FloatingElement 
+            className="absolute top-[15%] right-[25%] w-2 h-2 bg-primary-400/60 rounded-full" 
+            delay={0} 
+            duration={4} 
+            direction="diagonal"
           />
-          <motion.div
-            animate={{ y: [0, 15, 0], x: [0, 10, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-            className="absolute top-1/3 left-1/6 w-3 h-3 bg-accent-400/50 rounded-full"
+          <FloatingElement 
+            className="absolute top-[25%] left-[10%] w-3 h-3 bg-accent-400/50 rounded-full" 
+            delay={1} 
+            duration={5} 
+            direction="vertical"
           />
-          <motion.div
-            animate={{ y: [0, -25, 0], x: [0, -15, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-            className="absolute bottom-1/3 right-1/3 w-5 h-5 bg-primary-300/40 rounded-full"
+          <FloatingElement 
+            className="absolute top-[60%] right-[30%] w-2 h-2 bg-primary-300/50 rounded-full" 
+            delay={2} 
+            duration={6} 
+            direction="horizontal"
+          />
+          <FloatingElement 
+            className="absolute bottom-[20%] left-[20%] w-1.5 h-1.5 bg-accent-300/40 rounded-full" 
+            delay={0.5} 
+            duration={4.5} 
+            direction="diagonal"
+          />
+          
+          {/* Grid pattern overlay - 网格纹理 */}
+          <div 
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '60px 60px'
+            }}
           />
         </div>
 
+        {/* Hero Content */}
         <motion.div
           style={{ y: heroY, opacity: heroOpacity }}
           className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32"
         >
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <motion.span
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="inline-block px-4 py-1.5 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-6"
-              >
-                {isZh ? '专业热水器制造商' : 'Professional Water Heater Manufacturer'}
-              </motion.span>
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-4xl sm:text-5xl lg:text-7xl font-bold text-surface-900 leading-tight mb-6"
-              >
-                {isZh ? '为您的家提供' : 'Premium Hot Water'}
-                <span className="text-primary-600 block mt-2">
-                  {isZh ? '卓越热水解决方案' : 'Solutions for Your Home'}
-                </span>
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                className="text-lg text-surface-600 mb-8 max-w-lg"
-              >
-                {isZh
-                  ? '20年行业经验，专注研发高品质热水器产品。提供燃气、电热、太阳能等多种解决方案，满足全球家庭和商业需求。'
-                  : '20 years of industry expertise in developing premium water heaters. Offering gas, electric, and solar solutions for homes and businesses worldwide.'}
-              </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex flex-wrap gap-4"
-              >
-                <Link href="/products">
-                  <Button size="lg" className="group">
-                    {isZh ? '浏览产品' : 'Browse Products'}
-                    <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-                <Link href="/inquiry">
-                  <Button variant="secondary" size="lg">
-                    {isZh ? '获取报价' : 'Get Quote'}
-                  </Button>
-                </Link>
-              </motion.div>
-            </motion.div>
+            <div>
+              {/* Tag with staggered animation */}
+              <ScrollReveal delay={0.1} direction="down" distance={30}>
+                <motion.span
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.2, duration: 0.5 }}
+                  className="inline-block px-5 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-medium mb-8"
+                >
+                  {isZh ? '专业热水器制造商' : 'Professional Water Heater Manufacturer'}
+                </motion.span>
+              </ScrollReveal>
+              
+              {/* Main Title with SplitText */}
+              <ScrollReveal delay={0.2} direction="up" distance={40}>
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold text-surface-900 leading-[1.1] mb-8">
+                  <SplitText 
+                    text={isZh ? '为您的家提供卓越热水解决方案' : 'Premium Hot Water Solutions for Your Home'} 
+                    className="block"
+                    delay={0.3}
+                    stagger={0.03}
+                  />
+                </h1>
+              </ScrollReveal>
+              
+              {/* Description */}
+              <ScrollReveal delay={0.4} direction="up" distance={30}>
+                <motion.p 
+                  initial={{ opacity: 0 }}
+                  animate={isLoaded ? { opacity: 1 } : {}}
+                  transition={{ delay: 0.5 }}
+                  className="text-lg text-surface-600 mb-10 max-w-lg leading-relaxed"
+                >
+                  {isZh
+                    ? '20年行业经验，专注研发高品质热水器产品。提供燃气、电热、太阳能等多种解决方案，满足全球家庭和商业需求。'
+                    : '20 years of industry expertise in developing premium water heaters. Offering gas, electric, and solar solutions for homes and businesses worldwide.'}
+                </motion.p>
+              </ScrollReveal>
+              
+              {/* CTA Buttons */}
+              <ScrollReveal delay={0.5} direction="up" distance={20}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isLoaded ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                  className="flex flex-wrap gap-4"
+                >
+                  <Link href="/products">
+                    <Button size="lg" className="group">
+                      {isZh ? '浏览产品' : 'Browse Products'}
+                      <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </Link>
+                  <Link href="/inquiry">
+                    <Button variant="secondary" size="lg">
+                      {isZh ? '获取报价' : 'Get Quote'}
+                    </Button>
+                  </Link>
+                </motion.div>
+              </ScrollReveal>
+            </div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="relative hidden lg:block"
-            >
+            {/* Hero Image with 3D effect */}
+            <ScrollReveal delay={0.3} direction="left" distance={50}>
               <motion.div
-                animate={{ rotate: [0, 2, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative aspect-square"
+                initial={{ opacity: 0, scale: 0.9, rotate: -3 }}
+                animate={isLoaded ? { opacity: 1, scale: 1, rotate: 0 } : {}}
+                transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
+                className="relative hidden lg:block"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-3xl transform rotate-6" />
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-300 to-primary-500 rounded-3xl transform -rotate-3" />
-                <img
-                  src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&h=800&fit=crop"
-                  alt="Premium Water Heater"
-                  className="relative rounded-3xl shadow-2xl object-cover w-full h-full"
-                />
+                <motion.div
+                  animate={{ rotate: [0, 1, 0] }}
+                  transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+                  className="relative aspect-square"
+                >
+                  {/* Layered shadows for depth */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-primary-700 rounded-3xl transform rotate-6 translate-x-2 translate-y-2" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-primary-600 rounded-3xl transform -rotate-3 translate-x-1 translate-y-1" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-300 to-primary-500 rounded-3xl" />
+                  <img
+                    src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&h=800&fit=crop"
+                    alt="Premium Water Heater"
+                    className="relative rounded-3xl shadow-2xl object-cover w-full h-full"
+                  />
+                </motion.div>
+                
+                {/* Floating badge */}
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                  className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-xl p-4"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                      <CheckCircle className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <div className="text-sm font-semibold text-surface-900">
+                        {isZh ? 'ISO 9001' : 'ISO 9001'}
+                      </div>
+                      <div className="text-xs text-surface-500">
+                        {isZh ? '认证品质' : 'Certified'}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
+            </ScrollReveal>
           </div>
         </motion.div>
 
-        {/* Scroll Indicator */}
+        {/* Scroll Indicator with enhanced animation */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 1.2 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2"
         >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
+            animate={{ y: [0, 8, 0], opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="w-6 h-10 border-2 border-surface-400 rounded-full flex justify-center pt-2"
+            className="flex flex-col items-center"
           >
-            <div className="w-1 h-2 bg-surface-400 rounded-full" />
+            <span className="text-xs text-surface-400 mb-2 tracking-widest uppercase">
+              {isZh ? '向下滚动' : 'Scroll'}
+            </span>
+            <div className="w-5 h-8 border-2 border-surface-300 rounded-full flex justify-center pt-1.5">
+              <motion.div 
+                animate={{ y: [0, 8, 0], opacity: [1, 0.3, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+                className="w-1 h-2 bg-surface-400 rounded-full" 
+              />
+            </div>
           </motion.div>
         </motion.div>
       </section>
 
       {/* Features Strip */}
-      <section className="py-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-10 bg-white border-b relative overflow-hidden">
+        {/* 背景装饰 */}
+        <div className="absolute inset-0 opacity-50">
+          <div className="absolute left-0 top-0 w-32 h-full bg-gradient-to-r from-surface-50 to-transparent" />
+          <div className="absolute right-0 top-0 w-32 h-full bg-gradient-to-l from-surface-50 to-transparent" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: Shield, label: 'ISO 9001 Certified', labelZh: 'ISO 9001认证' },
@@ -445,60 +726,77 @@ export default function HomePage() {
               { icon: Truck, label: 'Global Shipping', labelZh: '全球配送' },
               { icon: CheckCircle, label: '5-Year Warranty', labelZh: '五年质保' },
             ].map((item, index) => (
-              <motion.div
-                key={item.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="flex items-center gap-3 p-3 rounded-xl hover:bg-surface-50 transition-colors"
+              <ScrollReveal 
+                key={item.label} 
+                delay={index * 0.1} 
+                direction="up"
+                distance={20}
               >
-                <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center">
-                  <item.icon className="w-5 h-5 text-primary-600" />
-                </div>
-                <span className="text-sm font-medium text-surface-700">
-                  {isZh ? item.labelZh : item.label}
-                </span>
-              </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  className="flex items-center gap-3 p-4 rounded-xl hover:bg-surface-50 transition-colors cursor-default"
+                >
+                  <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <item.icon className="w-5 h-5 text-primary-600" />
+                  </div>
+                  <span className="text-sm font-medium text-surface-700">
+                    {isZh ? item.labelZh : item.label}
+                  </span>
+                </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Product Categories Section */}
-      <section className="py-24 bg-surface-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 mb-4">
-              {isZh ? '产品分类' : 'Product Categories'}
-            </h2>
-            <p className="text-surface-600 max-w-2xl mx-auto">
-              {isZh
-                ? '全面的热水器解决方案，满足不同场景需求'
-                : 'Comprehensive water heating solutions for every need'}
-            </p>
-          </motion.div>
+      <section className="py-28 bg-surface-50 relative">
+        {/* 装饰背景 */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-200/20 rounded-full blur-3xl" />
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-accent-200/20 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <ScrollReveal direction="up" distance={30}>
+            <motion.div
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 mb-4">
+                <SplitText 
+                  text={isZh ? '产品分类' : 'Product Categories'} 
+                  delay={0}
+                  stagger={0.05}
+                />
+              </h2>
+              <p className="text-surface-600 text-lg max-w-2xl mx-auto">
+                {isZh
+                  ? '全面的热水器解决方案，满足不同场景需求'
+                  : 'Comprehensive water heating solutions for every need'}
+              </p>
+            </motion.div>
+          </ScrollReveal>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {categories.map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
+              <ScrollReveal 
+                key={category.id} 
+                delay={index * 0.08} 
+                direction="up"
+                distance={30}
               >
                 <TiltCard className="h-full">
                   <Link href={`/products?category=${category.id}`}>
-                    <div className="group h-full bg-white rounded-2xl p-6 shadow-soft hover:shadow-soft-hover transition-all duration-300">
-                      <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                    <motion.div 
+                      whileHover={{ y: -8 }}
+                      className="group h-full bg-white rounded-2xl p-6 shadow-soft hover:shadow-soft-hover transition-all duration-300"
+                    >
+                      <motion.div 
+                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${category.color} flex items-center justify-center mb-5`}
+                      >
                         <category.icon className="w-8 h-8 text-white" />
-                      </div>
+                      </motion.div>
                       <h3 className="text-lg font-semibold text-surface-900 mb-2 group-hover:text-primary-600 transition-colors">
                         {isZh ? category.nameZh : category.name}
                       </h3>
@@ -508,207 +806,309 @@ export default function HomePage() {
                       <div className="space-y-1">
                         {category.features.map((feature, i) => (
                           <div key={i} className="flex items-center gap-2 text-xs text-surface-500">
-                            <CheckCircle className="w-3 h-3 text-green-500" />
+                            <CheckCircle className="w-3 h-3 text-green-500 flex-shrink-0" />
                             {feature}
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </motion.div>
                   </Link>
                 </TiltCard>
-              </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-24 bg-primary-600 relative overflow-hidden">
+      {/* Stats Section with enhanced animation */}
+      <section className="py-28 bg-primary-600 relative overflow-hidden">
+        {/* Animated background */}
         <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
+            className="absolute top-0 left-1/4 w-64 h-64 bg-white/10 rounded-full blur-3xl"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{ duration: 10, repeat: Infinity, delay: 2 }}
+            className="absolute bottom-0 right-1/4 w-96 h-96 bg-white/10 rounded-full blur-3xl"
+          />
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }}
+          />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat) => (
-              <AnimatedCounter
-                key={stat.label}
-                value={stat.value}
-                suffix={stat.suffix}
-                label={stat.label}
-                labelZh={stat.labelZh}
-                isZh={isZh}
-              />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+            {stats.map((stat, index) => (
+              <ScrollReveal 
+                key={stat.label} 
+                delay={index * 0.15} 
+                direction="up"
+                distance={30}
+              >
+                <AnimatedCounter
+                  value={stat.value}
+                  suffix={stat.suffix}
+                  label={stat.label}
+                  labelZh={stat.labelZh}
+                  isZh={isZh}
+                />
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Scenarios Section */}
-      <section className="py-24 bg-white">
+      <section className="py-28 bg-white relative">
+        {/* 装饰背景 */}
+        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-surface-50 to-transparent" />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 mb-4">
-              {isZh ? '应用场景' : 'Application Scenarios'}
-            </h2>
-            <p className="text-surface-600 max-w-2xl mx-auto">
-              {isZh
-                ? '从家庭到工业，满足各类热水需求'
-                : 'From residential to industrial, meeting all hot water needs'}
-            </p>
-          </motion.div>
+          <ScrollReveal direction="up" distance={30}>
+            <motion.div
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 mb-4">
+                <SplitText 
+                  text={isZh ? '应用场景' : 'Application Scenarios'} 
+                  delay={0}
+                  stagger={0.05}
+                />
+              </h2>
+              <p className="text-surface-600 text-lg max-w-2xl mx-auto">
+                {isZh
+                  ? '从家庭到工业，满足各类热水需求'
+                  : 'From residential to industrial, meeting all hot water needs'}
+              </p>
+            </motion.div>
+          </ScrollReveal>
 
           <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
             {scenarios.map((scenario, idx) => (
-              <motion.div
-                key={scenario.id}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="flex-shrink-0 w-72 sm:w-80 snap-center"
+              <ScrollReveal 
+                key={scenario.id} 
+                delay={idx * 0.1} 
+                direction="left"
+                distance={50}
               >
-                <Link href={`/solutions/${scenario.id}`}>
-                  <div className="group relative rounded-2xl overflow-hidden aspect-[4/5]">
-                    <img
-                      src={scenario.image}
-                      alt={isZh ? scenario.nameZh : scenario.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                    <div className="absolute bottom-0 left-0 right-0 p-6">
-                      <h3 className="text-xl font-bold text-white mb-1">
-                        {isZh ? scenario.nameZh : scenario.name}
-                      </h3>
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        whileHover={{ opacity: 1, y: 0 }}
-                        className="flex items-center text-white/80 text-sm"
-                      >
-                        {isZh ? '了解更多' : 'Learn More'}
-                        <ArrowRight className="ml-2 w-4 h-4" />
-                      </motion.div>
-                    </div>
-                  </div>
-                </Link>
-              </motion.div>
+                <motion.div
+                  className="flex-shrink-0 w-72 sm:w-80 snap-center"
+                >
+                  <Link href={`/solutions/${scenario.id}`}>
+                    <motion.div 
+                      whileHover={{ y: -10 }}
+                      className="group relative rounded-2xl overflow-hidden aspect-[4/5]"
+                    >
+                      <motion.img
+                        src={scenario.image}
+                        alt={isZh ? scenario.nameZh : scenario.name}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        whileHover={{ scale: 1.1 }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 p-6">
+                        <motion.h3 
+                          className="text-xl font-bold text-white mb-2"
+                        >
+                          {isZh ? scenario.nameZh : scenario.name}
+                        </motion.h3>
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          whileHover={{ opacity: 1, x: 0 }}
+                          className="flex items-center text-white/80 text-sm"
+                        >
+                          {isZh ? '了解更多' : 'Learn More'}
+                          <ArrowRight className="ml-2 w-4 h-4" />
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  </Link>
+                </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-surface-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 mb-4">
-              {isZh ? '客户见证' : 'Customer Testimonials'}
-            </h2>
-            <p className="text-surface-600 max-w-2xl mx-auto">
-              {isZh
-                ? '来自全球客户的口碑反馈'
-                : 'Trusted by customers worldwide'}
-            </p>
-          </motion.div>
+      <section className="py-28 bg-surface-50 relative overflow-hidden">
+        {/* 装饰背景 */}
+        <div className="absolute inset-0">
+          <div className="absolute top-1/2 left-0 w-64 h-64 bg-primary-100/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent-100/20 rounded-full blur-3xl" />
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <ScrollReveal direction="up" distance={30}>
+            <motion.div
+              className="text-center mb-16"
+            >
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-surface-900 mb-4">
+                <SplitText 
+                  text={isZh ? '客户见证' : 'Customer Testimonials'} 
+                  delay={0}
+                  stagger={0.05}
+                />
+              </h2>
+              <p className="text-surface-600 text-lg max-w-2xl mx-auto">
+                {isZh
+                  ? '来自全球客户的口碑反馈'
+                  : 'Trusted by customers worldwide'}
+              </p>
+            </motion.div>
+          </ScrollReveal>
 
           <TestimonialCarousel />
         </div>
       </section>
 
       {/* Partners Section */}
-      <section className="py-16 bg-white border-t">
+      <section className="py-20 bg-white border-t relative overflow-hidden">
+        {/* 装饰线条 */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-16 bg-gradient-to-b from-primary-200 to-transparent" />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-12"
-          >
-            <h3 className="text-lg font-semibold text-surface-500 uppercase tracking-wider">
-              {isZh ? '认证与合作' : 'Certifications & Partners'}
-            </h3>
-          </motion.div>
+          <ScrollReveal direction="up" distance={20}>
+            <motion.div
+              className="text-center mb-12"
+            >
+              <h3 className="text-lg font-semibold text-surface-500 uppercase tracking-[0.2em]">
+                {isZh ? '认证与合作' : 'Certifications & Partners'}
+              </h3>
+            </motion.div>
+          </ScrollReveal>
 
           <div className="flex justify-center items-center gap-8 sm:gap-16 flex-wrap">
             {partners.map((partner, idx) => (
-              <motion.div
-                key={partner.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                className="grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300"
+              <ScrollReveal 
+                key={partner.name} 
+                delay={idx * 0.1} 
+                direction="up"
+                distance={20}
               >
-                <div className="w-24 h-24 flex items-center justify-center bg-surface-100 rounded-xl">
-                  <span className="text-xl font-bold text-surface-400">{partner.name}</span>
-                </div>
-              </motion.div>
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  className="grayscale hover:grayscale-0 opacity-60 hover:opacity-100 transition-all duration-300 cursor-pointer"
+                >
+                  <div className="w-24 h-24 flex items-center justify-center bg-surface-100 rounded-2xl hover:shadow-lg transition-shadow">
+                    <span className="text-xl font-bold text-surface-400">{partner.name}</span>
+                  </div>
+                </motion.div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section with Animation */}
-      <section className="py-24 bg-primary-600 relative overflow-hidden">
-        {/* Animated Background */}
+      {/* CTA Section with Enhanced Animation */}
+      <section className="py-32 bg-primary-600 relative overflow-hidden">
+        {/* Animated Background Layers */}
         <div className="absolute inset-0">
+          {/* Radial gradient pulse */}
           <motion.div
             className="absolute top-0 left-0 w-full h-full"
-            style={{
-              background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-            }}
             animate={{
               background: [
-                'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-                'radial-gradient(circle at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
-                'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%)',
+                'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.15) 0%, transparent 50%)',
+                'radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.15) 0%, transparent 50%)',
+                'radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.15) 0%, transparent 50%)',
               ],
             }}
-            transition={{ duration: 8, repeat: Infinity }}
+            transition={{ duration: 10, repeat: Infinity }}
           />
-          <div className="absolute top-10 right-10 w-32 h-32 border border-white/20 rounded-full" />
-          <div className="absolute bottom-10 left-10 w-20 h-20 border border-white/20 rounded-full" />
+          {/* Decorative circles */}
+          <motion.div
+            animate={{ 
+              scale: [1, 1.2, 1],
+              opacity: [0.3, 0.5, 0.3],
+            }}
+            transition={{ duration: 6, repeat: Infinity }}
+            className="absolute top-10 right-10 w-40 h-40 border border-white/10 rounded-full"
+          />
+          <motion.div
+            animate={{ 
+              scale: [1, 1.3, 1],
+              opacity: [0.2, 0.4, 0.2],
+            }}
+            transition={{ duration: 8, repeat: Infinity, delay: 1 }}
+            className="absolute bottom-10 left-10 w-24 h-24 border border-white/10 rounded-full"
+          />
+          {/* Rotating ring */}
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-white/5 rounded-full"
+            transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-white/5 rounded-full"
+          />
+          {/* Grid pattern */}
+          <div 
+            className="absolute inset-0 opacity-5"
+            style={{
+              backgroundImage: `
+                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)
+              `,
+              backgroundSize: '50px 50px'
+            }}
           />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
-              {isZh ? '需要定制方案？' : 'Need a Custom Solution?'}
-            </h2>
-            <p className="text-primary-100 text-lg mb-8 max-w-2xl mx-auto">
+          <ScrollReveal direction="up" distance={30}>
+            <motion.div>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-8 leading-tight">
+                <SplitText 
+                  text={isZh ? '需要定制方案？' : 'Need a Custom Solution?'} 
+                  className="block"
+                  delay={0}
+                  stagger={0.03}
+                />
+              </h2>
+            </motion.div>
+          </ScrollReveal>
+          
+          <ScrollReveal delay={0.2} direction="up" distance={20}>
+            <motion.p 
+              className="text-primary-100 text-lg mb-10 max-w-2xl mx-auto leading-relaxed"
+            >
               {isZh
                 ? '我们的专业团队可以根据您的具体需求提供定制化的热水解决方案。'
                 : 'Our professional team can provide customized hot water solutions tailored to your specific needs.'}
-            </p>
-            <Link href="/inquiry">
-              <Button 
-                variant="secondary" 
-                size="lg" 
-                className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-8"
-              >
-                {isZh ? '立即咨询' : 'Contact Us Today'}
-              </Button>
-            </Link>
-          </motion.div>
+            </motion.p>
+          </ScrollReveal>
+          
+          <ScrollReveal delay={0.3} direction="up" distance={10}>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <Link href="/inquiry">
+                <Button 
+                  variant="secondary" 
+                  size="lg" 
+                  className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-10 py-4 shadow-xl hover:shadow-2xl transition-all"
+                >
+                  {isZh ? '立即咨询' : 'Contact Us Today'}
+                </Button>
+              </Link>
+            </motion.div>
+          </ScrollReveal>
         </div>
       </section>
     </div>
