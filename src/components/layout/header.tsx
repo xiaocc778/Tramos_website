@@ -67,7 +67,7 @@ export function Header() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { items } = useCartStore();
-  const { preferences, setMobileMenuOpen, setCartOpen, setTheme, setLanguage } = useUIStore();
+  const { preferences, isMobileMenuOpen, setMobileMenuOpen, setCartOpen, setSearchOpen, setTheme, setLanguage } = useUIStore();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -182,7 +182,7 @@ export function Header() {
           <div className="flex items-center space-x-2">
             {/* Search */}
             <button
-              onClick={() => useUIStore.getState().setSearchOpen(true)}
+              onClick={() => setSearchOpen(true)}
               className="p-2 text-surface-600 hover:text-primary-600 transition-colors"
               aria-label="Search"
             >
@@ -240,9 +240,9 @@ export function Header() {
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {useUIStore.getState().isMobileMenuOpen && (
+        {isMobileMenuOpen && (
           <MobileMenu
-            onClose={() => useUIStore.getState().setMobileMenuOpen(false)}
+            onClose={() => setMobileMenuOpen(false)}
             navItems={navItems}
           />
         )}

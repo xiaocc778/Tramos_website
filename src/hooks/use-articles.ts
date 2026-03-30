@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import { articleService } from '@/lib/services/article.service';
 
 // 文章列表 Hook
-export function useArticles(type?: 'news' | 'case_study' | 'faq') {
+export function useArticles(options?: { type?: 'news' | 'case_study' | 'faq' }) {
   return useQuery({
-    queryKey: ['articles', type],
-    queryFn: () => articleService.getAll({ type }),
+    queryKey: ['articles', options?.type],
+    queryFn: () => articleService.getAll(options ? { type: options.type } : undefined),
     staleTime: 1000 * 60 * 5,
   });
 }

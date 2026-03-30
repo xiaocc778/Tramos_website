@@ -8,7 +8,7 @@ export const articleService = {
     if (filters?.type) {
       params.set('type', filters.type);
     }
-    if (filters?.published !== false) {
+    if (filters?.is_published !== false) {
       params.set('published', 'true');
     }
 
@@ -28,11 +28,11 @@ export const articleService = {
   },
 
   async getPublished(): Promise<Article[]> {
-    return this.getAll({ published: true });
+    return this.getAll({ is_published: true });
   },
 
   async getByType(type: 'news' | 'case_study' | 'faq'): Promise<Article[]> {
-    return this.getAll({ type, published: true });
+    return this.getAll({ type, is_published: true });
   },
 
   async getCaseStudies(): Promise<Article[]> {

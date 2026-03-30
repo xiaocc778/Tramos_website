@@ -24,7 +24,6 @@ export default function ProductsPage() {
 
   const { data: products = [], isLoading, error } = useProducts({
     category: selectedCategory !== 'all' ? selectedCategory : undefined,
-    featured: false,
   });
 
   const filteredProducts = products.filter(product => {

@@ -38,12 +38,17 @@ export interface Article {
   slug: string;
   title_en: string;
   title_zh: string;
+  excerpt_en?: string;
+  excerpt_zh?: string;
   content_en: string;
   content_zh: string;
   type: 'news' | 'case_study' | 'faq';
-  cover_image?: string;
+  featured_image?: string;
+  author?: string;
+  published_at?: string;
   is_published: boolean;
   created_at: string;
+  updated_at?: string;
 }
 
 // 订单类型
@@ -118,7 +123,7 @@ export interface ProductFilters {
 
 export interface ArticleFilters {
   type?: 'news' | 'case_study' | 'faq';
-  published?: boolean;
+  is_published?: boolean;
 }
 
 // ============== 前端专用类型（带方便使用的字段） ==============
