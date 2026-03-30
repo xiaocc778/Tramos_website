@@ -17,7 +17,7 @@ const solutions = [
     titleZh: '住宅',
     desc: 'Compact, safe, energy-efficient water heaters for homes and apartments.',
     descZh: '紧凑、安全、节能的家用热水器，适用于家庭和公寓。',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=600&fit=crop',
+    image: '/images/lifestyle/modern-kitchen.jpg',
   },
   {
     key: 'commercial',
@@ -26,7 +26,7 @@ const solutions = [
     titleZh: '商业',
     desc: 'High-capacity systems for hotels, gyms, hospitals, and office buildings.',
     descZh: '适用于酒店、健身房、医院和办公大楼的高容量系统。',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop',
+    image: '/images/lifestyle/hotel-lobby.jpg',
   },
   {
     key: 'industrial',
@@ -35,7 +35,7 @@ const solutions = [
     titleZh: '工业',
     desc: 'Heavy-duty boilers and heat pump systems for manufacturing plants.',
     descZh: '适用于制造工厂的重型锅炉和热泵系统。',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=800&h=600&fit=crop',
+    image: '/images/lifestyle/factory-machinery.jpg',
   },
 ];
 

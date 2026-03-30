@@ -18,7 +18,7 @@ const categories = [
     desc: 'Instant hot water with advanced safety features',
     descZh: '先进安全功能的即时热水',
     color: 'from-orange-500 to-red-500',
-    image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&h=500&fit=crop',
+    image: '/images/products/wall-water-heater.jpg',
     features: ['Instant Heating', 'Smart Control', 'Safety Lock'],
   },
   {
@@ -29,7 +29,7 @@ const categories = [
     desc: 'Compact and efficient for any space',
     descZh: '紧凑高效，适合任何空间',
     color: 'from-blue-500 to-cyan-500',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=500&fit=crop',
+    image: '/images/products/water-heater-sink.jpg',
     features: ['Energy Saving', 'Quick Install', 'Quiet Operation'],
   },
   {
@@ -40,7 +40,7 @@ const categories = [
     desc: 'Eco-friendly with free energy',
     descZh: '环保节能，免费能源',
     color: 'from-yellow-500 to-amber-500',
-    image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=600&h=500&fit=crop',
+    image: '/images/products/solar-house-roof.jpg',
     features: ['Zero Cost', 'Environmental', 'Long Lifespan'],
   },
   {
@@ -51,7 +51,7 @@ const categories = [
     desc: 'Smart temperature control technology',
     descZh: '智能温控技术',
     color: 'from-green-500 to-emerald-500',
-    image: 'https://images.unsplash.com/photo-1548610762-c7faabdb36d5?w=600&h=500&fit=crop',
+    image: '/images/products/solar-panel-rooftop.jpg',
     features: ['AI Control', 'High Efficiency', 'All Weather'],
   },
 ];

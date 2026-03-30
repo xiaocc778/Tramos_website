@@ -31,7 +31,7 @@ const solutions: Record<string, {
     titleZh: '住宅解决方案',
     desc: 'Compact, safe, and energy-efficient water heaters designed for modern homes and apartments. From instant gas heaters to smart heat pumps, we have the perfect solution for every household.',
     descZh: '紧凑、安全、节能的热水器，专为现代家庭和公寓设计。从即时燃气热水器到智能热泵，我们为每个家庭提供完美的解决方案。',
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop',
+    image: '/images/lifestyle/modern-kitchen.jpg',
     features: [
       { icon: '⚡', label: 'Instant Heating', labelZh: '即时加热' },
       { icon: '🛡️', label: 'Multi-Point Protection', labelZh: '多点防护' },
@@ -51,7 +51,7 @@ const solutions: Record<string, {
     titleZh: '商业解决方案',
     desc: 'High-capacity water heating systems engineered for hotels, hospitals, gyms, schools, and office buildings. Built for reliability and efficiency under heavy-demand conditions.',
     descZh: '专为酒店、医院、健身房、学校和办公大楼设计的高容量热水系统。在高需求条件下打造可靠高效的热水供应。',
-    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=600&fit=crop',
+    image: '/images/lifestyle/hotel-lobby.jpg',
     features: [
       { icon: '🏨', label: 'Hotels & Resorts', labelZh: '酒店度假村' },
       { icon: '🏥', label: 'Hospitals & Clinics', labelZh: '医院诊所' },
@@ -71,7 +71,7 @@ const solutions: Record<string, {
     titleZh: '工业解决方案',
     desc: 'Heavy-duty boilers, steam systems, and industrial-grade heat pumps for manufacturing, food processing, pharmaceuticals, and chemical industries. Engineered for continuous operation.',
     descZh: '专为制造、食品加工、制药和化工行业设计的重型锅炉、蒸汽系统和工业级热泵。为连续运行而打造。',
-    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=600&fit=crop',
+    image: '/images/lifestyle/factory-production.jpg',
     features: [
       { icon: '🏭', label: 'Manufacturing Plants', labelZh: '生产工厂' },
       { icon: '💊', label: 'Pharmaceutical Industry', labelZh: '制药行业' },
@@ -91,7 +91,7 @@ const solutions: Record<string, {
     titleZh: 'B2B合作伙伴计划',
     desc: 'Join our global network of distributors and partners. We offer OEM/ODM manufacturing, exclusive territory rights, marketing support, and dedicated technical teams.',
     descZh: '加入我们的全球经销商和合作伙伴网络。我们提供OEM/ODM制造、独家区域权、营销支持和专属技术支持团队。',
-    image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&h=600&fit=crop',
+    image: '/images/lifestyle/office-building.jpg',
     features: [
       { icon: '🔧', label: 'OEM / ODM Manufacturing', labelZh: 'OEM/ODM制造' },
       { icon: '🌍', label: 'Exclusive Territory Rights', labelZh: '独家区域权' },

@@ -72,7 +72,7 @@ export default function ContactPage() {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <div className="bg-white rounded-2xl shadow-soft overflow-hidden h-full min-h-[400px]">
               <img
-                src="https://images.unsplash.com/photo-1574958269340-fa927503f3dd?w=800&q=80"
+                src="/images/lifestyle/office-building.jpg"
                 alt="Office"
                 className="w-full h-full object-cover"
               />

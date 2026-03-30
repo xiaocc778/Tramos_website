@@ -60,13 +60,12 @@ export function HeroSection({ isZh = false }: HeroSectionProps) {
               <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-amber-500 rounded-3xl transform -rotate-2 translate-x-1 translate-y-1 opacity-80" />
               <div className="relative rounded-3xl overflow-hidden bg-white shadow-2xl">
                 <Image
-                  src="https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=800&h=800&fit=crop"
+                  src="/images/products/solar-water-heater.jpg"
                   alt="Premium Water Heater"
                   width={600}
                   height={600}
                   className="w-full h-full object-cover"
                   priority
-                  unoptimized
                 />
               </div>
             </div>
@@ -80,7 +79,7 @@ export function HeroSection({ isZh = false }: HeroSectionProps) {
                   </svg>
                 </div>
                 <div>
-                  <div className="text-sm font-semibold text-white">ISO 9001</div>
+                  <div className="text-sm font-semibold text-gray-800">ISO 9001</div>
                   <div className="text-xs text-gray-400">{isZh ? '认证品质' : 'Certified'}</div>
                 </div>
               </div>

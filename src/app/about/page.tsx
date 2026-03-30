@@ -60,7 +60,7 @@ export default function AboutPage() {
         <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
             <img
-              src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80"
+              src="/images/lifestyle/factory-production.jpg"
               alt="Factory"
               className="rounded-2xl shadow-soft"
             />
