@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Search, Grid, List } from 'lucide-react';
+import { Search, Grid, List, Loader2 } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
+import { useProducts } from '@/hooks';
 
-const categories = [
+const staticCategories = [
   { id: 'all', name: 'All Products', nameZh: '全部产品' },
   { id: 'gas', name: 'Gas Heaters', nameZh: '燃气热水器' },
   { id: 'electric', name: 'Electric Heaters', nameZh: '电热水器' },
@@ -15,78 +16,22 @@ const categories = [
   { id: 'boiler', name: 'Boilers', nameZh: '锅炉' },
 ];
 
-const products = [
-  {
-    id: '1',
-    name: 'Smart Gas Water Heater 12L',
-    nameZh: '智能燃气热水器 12L',
-    price: 599,
-    comparePrice: 699,
-    image: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&h=400&fit=crop',
-    category: 'gas',
-    featured: true,
-  },
-  {
-    id: '2',
-    name: 'Electric Instant Water Heater',
-    nameZh: '电即热式热水器',
-    price: 299,
-    comparePrice: 399,
-    image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=400&fit=crop',
-    category: 'electric',
-    featured: true,
-  },
-  {
-    id: '3',
-    name: 'Solar Thermal System 300L',
-    nameZh: '太阳能热水系统 300L',
-    price: 1299,
-    comparePrice: 1599,
-    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=400&fit=crop',
-    category: 'solar',
-    featured: true,
-  },
-  {
-    id: '4',
-    name: 'Commercial Heat Pump 10P',
-    nameZh: '商用空气能热泵 10P',
-    price: 2499,
-    comparePrice: 2999,
-    image: 'https://images.unsplash.com/photo-1631545806609-8da5563e6a5d?w=600&h=400&fit=crop',
-    category: 'heat-pump',
-    featured: false,
-  },
-  {
-    id: '5',
-    name: 'Industrial Boiler 500L',
-    nameZh: '工业锅炉 500L',
-    price: 4999,
-    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
-    category: 'boiler',
-    featured: false,
-  },
-  {
-    id: '6',
-    name: 'Tankless Electric Heater',
-    nameZh: '即热式电热水器',
-    price: 399,
-    comparePrice: 499,
-    image: 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&h=400&fit=crop',
-    category: 'electric',
-    featured: true,
-  },
-];
-
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const isZh = useUIStore.getState().preferences.language === 'zh';
 
+  const { data: products = [], isLoading, error } = useProducts({
+    category: selectedCategory !== 'all' ? selectedCategory : undefined,
+    featured: false,
+  });
+
   const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = (isZh ? product.nameZh : product.name).toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
+    const matchesSearch = searchQuery === '' ||
+      product.name_en.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.name_zh.includes(searchQuery);
+    return matchesSearch;
   });
 
   return (
@@ -107,47 +52,59 @@ export default function ProductsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-6 mb-8">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
-              <input
-                type="text"
-                placeholder={isZh ? '搜索产品...' : 'Search products...'}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+          <div className="flex flex-col lg:flex-row gap-6 mb-8">
+            {isLoading && (
+              <div className="flex items-center justify-center w-full py-4">
+                <Loader2 className="w-6 h-6 animate-spin text-primary-600" />
+              </div>
+            )}
+            {error && (
+              <div className="text-red-500 py-4">
+                {isZh ? '加载产品时出错' : 'Error loading products'}
+              </div>
+            )}
+            {!isLoading && !error && (
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-surface-400" />
+                  <input
+                    type="text"
+                    placeholder={isZh ? '搜索产品...' : 'Search products...'}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  />
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-4">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-4 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+              >
+                {staticCategories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {isZh ? cat.nameZh : cat.name}
+                  </option>
+                ))}
+              </select>
+              <div className="flex border border-surface-200 rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setViewMode('grid')}
+                  className={`p-3 ${viewMode === 'grid' ? 'bg-primary-600 text-white' : 'bg-white text-surface-600'}`}
+                >
+                  <Grid className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => setViewMode('list')}
+                  className={`p-3 ${viewMode === 'list' ? 'bg-primary-600 text-white' : 'bg-white text-surface-600'}`}
+                >
+                  <List className="w-5 h-5" />
+                </button>
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-4">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500"
-            >
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {isZh ? cat.nameZh : cat.name}
-                </option>
-              ))}
-            </select>
-            <div className="flex border border-surface-200 rounded-xl overflow-hidden">
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-3 ${viewMode === 'grid' ? 'bg-primary-600 text-white' : 'bg-white text-surface-600'}`}
-              >
-                <Grid className="w-5 h-5" />
-              </button>
-              <button
-                onClick={() => setViewMode('list')}
-                className={`p-3 ${viewMode === 'list' ? 'bg-primary-600 text-white' : 'bg-white text-surface-600'}`}
-              >
-                <List className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
 
         <div className={`grid gap-6 ${viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {filteredProducts.map((product, index) => (
@@ -157,28 +114,36 @@ export default function ProductsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: index * 0.1 }}
             >
-              <Link href={`/products/${product.id}`}>
+              <Link href={`/products/${product.slug}`}>
                 <div className="group bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300">
                   <div className="aspect-[4/3] overflow-hidden relative">
                     <img
-                      src={product.image}
-                      alt={isZh ? product.nameZh : product.name}
+                      src={product.images?.[0] || product.images?.[0] || '/placeholder.png'}
+                      alt={isZh ? product.name_zh : product.name_en}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {product.comparePrice && (
+                    {product.compare_price && (
                       <span className="absolute top-4 left-4 bg-red-500 text-white text-sm font-medium px-3 py-1 rounded-full">
                         {isZh ? '促销' : 'Sale'}
+                      </span>
+                    )}
+                    {product.stock_status === 'out_of_stock' && (
+                      <span className="absolute top-4 right-4 bg-surface-500 text-white text-sm font-medium px-3 py-1 rounded-full">
+                        {isZh ? '缺货' : 'Out of Stock'}
                       </span>
                     )}
                   </div>
                   <div className="p-5">
                     <h3 className="text-lg font-semibold text-surface-900 mb-2 group-hover:text-primary-600 transition-colors">
-                      {isZh ? product.nameZh : product.name}
+                      {isZh ? product.name_zh : product.name_en}
                     </h3>
+                    <p className="text-sm text-surface-500 mb-3 line-clamp-2">
+                      {isZh ? product.description_zh : product.description_en}
+                    </p>
                     <div className="flex items-center gap-2">
-                      <span className="text-2xl font-bold text-primary-600">${product.price}</span>
-                      {product.comparePrice && (
-                        <span className="text-surface-400 line-through">${product.comparePrice}</span>
+                      <span className="text-2xl font-bold text-primary-600">${product.price.toLocaleString()}</span>
+                      {product.compare_price && (
+                        <span className="text-surface-400 line-through">${product.compare_price.toLocaleString()}</span>
                       )}
                     </div>
                   </div>
@@ -188,7 +153,7 @@ export default function ProductsPage() {
           ))}
         </div>
 
-        {filteredProducts.length === 0 && (
+        {!isLoading && filteredProducts.length === 0 && (
           <div className="text-center py-16">
             <p className="text-surface-500 text-lg">
               {isZh ? '未找到相关产品' : 'No products found'}

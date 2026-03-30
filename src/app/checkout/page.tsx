@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { CreditCard, Lock, CheckCircle } from 'lucide-react';
 import { Button, Input } from '@/components/ui';
@@ -16,6 +16,12 @@ export default function CheckoutPage() {
   const router = useRouter();
   const total = getTotal();
 
+  useEffect(() => {
+    if (items.length === 0 && !isComplete) {
+      router.replace('/products');
+    }
+  }, [items.length, isComplete, router]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -26,8 +32,11 @@ export default function CheckoutPage() {
   };
 
   if (items.length === 0 && !isComplete) {
-    router.push('/products');
-    return null;
+    return (
+      <div className="min-h-screen bg-surface-50 flex items-center justify-center">
+        <p className="text-surface-600">{isZh ? '正在跳转…' : 'Redirecting…'}</p>
+      </div>
+    );
   }
 
   if (isComplete) {

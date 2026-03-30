@@ -1,114 +1,93 @@
 import { NextResponse } from 'next/server';
-
-// Mock product data - in production, fetch from Supabase
-const products = [
-  {
-    id: '1',
-    slug: 'smart-gas-water-heater-12l',
-    name_en: 'Smart Gas Water Heater 12L',
-    name_zh: '智能燃气热水器 12L',
-    description_en: 'Advanced smart gas water heater with digital temperature control and safety features.',
-    description_zh: '先进的智能燃气热水器，配备数字温度控制和安全功能。',
-    price: 599,
-    compare_price: 699,
-    category_id: 'gas',
-    specifications: {
-      capacity: '12L',
-      type: 'Gas',
-      'energy_rating': 'A+',
-      warranty: '5 Years'
-    },
-    images: ['https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600'],
-    stock_quantity: 50,
-    stock_status: 'in_stock',
-    is_featured: true,
-    is_active: true
-  },
-  {
-    id: '2',
-    slug: 'electric-instant-water-heater',
-    name_en: 'Electric Instant Water Heater',
-    name_zh: '电即热式热水器',
-    description_en: 'Compact electric instant water heater, perfect for small spaces.',
-    description_zh: '紧凑型电即热式热水器，非常适合小空间。',
-    price: 299,
-    compare_price: 399,
-    category_id: 'electric',
-    specifications: {
-      capacity: '6L',
-      type: 'Electric',
-      'energy_rating': 'A',
-      warranty: '3 Years'
-    },
-    images: ['https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600'],
-    stock_quantity: 100,
-    stock_status: 'in_stock',
-    is_featured: true,
-    is_active: true
-  },
-  {
-    id: '3',
-    slug: 'solar-thermal-system-300l',
-    name_en: 'Solar Thermal System 300L',
-    name_zh: '太阳能热水系统 300L',
-    description_en: 'Eco-friendly solar thermal system with 300L capacity for whole home heating.',
-    description_zh: '环保的太阳能热水系统，300L容量，可为整屋供暖。',
-    price: 1299,
-    compare_price: 1599,
-    category_id: 'solar',
-    specifications: {
-      capacity: '300L',
-      type: 'Solar',
-      'energy_rating': 'A++',
-      warranty: '10 Years'
-    },
-    images: ['https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600'],
-    stock_quantity: 30,
-    stock_status: 'in_stock',
-    is_featured: true,
-    is_active: true
-  }
-];
+import { createServerClient } from '@/lib/supabase/server';
 
 export async function GET(request: Request) {
+  const supabase = await createServerClient();
   const { searchParams } = new URL(request.url);
   const category = searchParams.get('category');
   const featured = searchParams.get('featured');
   const slug = searchParams.get('slug');
+  const search = searchParams.get('search');
+  const minPrice = searchParams.get('minPrice');
+  const maxPrice = searchParams.get('maxPrice');
+  const inStock = searchParams.get('inStock');
 
-  let filteredProducts = [...products];
-
+  // 单个产品查询
   if (slug) {
-    const product = filteredProducts.find(p => p.slug === slug);
-    if (!product) {
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_active', true)
+      .single();
+
+    if (error) {
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
-    return NextResponse.json(product);
+    return NextResponse.json(data);
   }
 
+  // 列表查询
+  let query = supabase
+    .from('products')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at', { ascending: false });
+
   if (category && category !== 'all') {
-    filteredProducts = filteredProducts.filter(p => p.category_id === category);
+    query = query.eq('category_id', category);
   }
 
   if (featured === 'true') {
-    filteredProducts = filteredProducts.filter(p => p.is_featured);
+    query = query.eq('is_featured', true);
   }
 
-  return NextResponse.json(filteredProducts);
+  if (search) {
+    query = query.or(
+      `name_en.ilike.%${search}%,name_zh.ilike.%${search}%,description_en.ilike.%${search}%,description_zh.ilike.%${search}%`
+    );
+  }
+
+  if (minPrice) {
+    query = query.gte('price', Number(minPrice));
+  }
+
+  if (maxPrice) {
+    query = query.lte('price', Number(maxPrice));
+  }
+
+  if (inStock === 'true') {
+    query = query.neq('stock_status', 'out_of_stock');
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('Supabase error:', error);
+    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+  }
+
+  return NextResponse.json(data || []);
 }
 
 export async function POST(request: Request) {
+  const supabase = await createServerClient();
+
   try {
     const body = await request.json();
-    
-    // In production, insert into Supabase
-    const newProduct = {
-      id: Date.now().toString(),
-      ...body,
-      created_at: new Date().toISOString()
-    };
 
-    return NextResponse.json(newProduct, { status: 201 });
+    const { data, error } = await supabase
+      .from('products')
+      .insert(body)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return NextResponse.json({ error: 'Failed to create product' }, { status: 400 });
+    }
+
+    return NextResponse.json(data, { status: 201 });
   } catch {
     return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
   }
