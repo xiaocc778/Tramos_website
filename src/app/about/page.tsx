@@ -24,13 +24,13 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen bg-surface-50">
-      <div className="bg-primary-600 py-16">
+      <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl font-bold text-white mb-4">
               {isZh ? '关于我们' : 'About Us'}
             </h1>
-            <p className="text-primary-100 text-lg max-w-2xl mx-auto">
+            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
               {isZh
                 ? '专注热水器研发制造，为全球客户提供可靠的热水解决方案'
                 : 'Dedicated to water heater R&D and manufacturing, providing reliable hot water solutions for global customers'}
@@ -50,7 +50,7 @@ export default function AboutPage() {
               transition={{ delay: i * 0.1 }}
               className="bg-white rounded-2xl p-6 text-center shadow-soft"
             >
-              <div className="text-3xl lg:text-4xl font-bold text-primary-600 mb-2">{s.num}</div>
+              <div className="text-3xl lg:text-4xl font-bold text-orange-500 mb-2">{s.num}</div>
               <div className="text-surface-600 text-sm">{s.label}</div>
             </motion.div>
           ))}
@@ -101,8 +101,8 @@ export default function AboutPage() {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white rounded-2xl p-6 shadow-soft text-center"
               >
-                <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <v.icon className="w-7 h-7 text-primary-600" />
+                <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                  <v.icon className="w-7 h-7 text-orange-600" />
                 </div>
                 <h3 className="font-bold text-surface-900 mb-2">{v.title}</h3>
                 <p className="text-surface-600 text-sm">{v.desc}</p>
@@ -112,7 +112,7 @@ export default function AboutPage() {
         </motion.div>
 
         {/* CTA */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 bg-primary-50 rounded-2xl p-8 text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 bg-orange-50 rounded-2xl p-8 text-center">
           <h2 className="text-2xl font-bold text-surface-900 mb-4">
             {isZh ? '想了解更多？' : 'Want to Know More?'}
           </h2>
@@ -121,12 +121,12 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/products">
-              <motion.button whileHover={{ scale: 1.05 }} className="bg-primary-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors">
+              <motion.button whileHover={{ scale: 1.05 }} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-amber-600 transition-colors">
                 {isZh ? '浏览产品' : 'Browse Products'}
               </motion.button>
             </Link>
             <Link href="/contact">
-              <motion.button whileHover={{ scale: 1.05 }} className="bg-white text-primary-600 px-8 py-3 rounded-xl font-medium border border-primary-200 hover:bg-primary-50 transition-colors">
+              <motion.button whileHover={{ scale: 1.05 }} className="bg-white text-orange-600 px-8 py-3 rounded-xl font-medium border border-orange-200 hover:bg-orange-50 transition-colors">
                 {isZh ? '联系我们' : 'Contact Us'}
               </motion.button>
             </Link>

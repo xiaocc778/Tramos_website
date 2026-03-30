@@ -42,7 +42,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-surface-50">
-      <div className="bg-primary-600 py-16">
+      <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -52,7 +52,7 @@ export default function CartPage() {
             <h1 className="text-4xl font-bold text-white mb-4">
               {isZh ? '购物车' : 'Shopping Cart'}
             </h1>
-            <p className="text-primary-100 text-lg">
+            <p className="text-orange-200 text-lg">
               {isZh
                 ? `${items.length} 件商品`
                 : `${items.length} items`}
@@ -86,7 +86,7 @@ export default function CartPage() {
                       <h3 className="font-semibold text-surface-900 mb-1">
                         {isZh ? item.nameZh : item.name}
                       </h3>
-                      <p className="text-primary-600 font-bold">${item.price}</p>
+                      <p className="text-orange-500 font-bold">${item.price}</p>
                     </div>
                     <button
                       onClick={() => removeItem(item.id)}
@@ -99,7 +99,7 @@ export default function CartPage() {
                     <div className="flex items-center border border-surface-200 rounded-lg">
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        className="p-2 text-surface-600 hover:text-primary-600 transition-colors"
+                        className="p-2 text-surface-600 hover:text-orange-500 transition-colors"
                       >
                         <Minus className="w-4 h-4" />
                       </button>
@@ -108,7 +108,7 @@ export default function CartPage() {
                       </span>
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                        className="p-2 text-surface-600 hover:text-primary-600 transition-colors"
+                        className="p-2 text-surface-600 hover:text-orange-500 transition-colors"
                       >
                         <Plus className="w-4 h-4" />
                       </button>
@@ -148,7 +148,7 @@ export default function CartPage() {
                 </div>
                 <div className="border-t pt-4 flex justify-between font-bold text-lg">
                   <span>{isZh ? '总计' : 'Total'}</span>
-                  <span className="text-primary-600">${total.toFixed(2)}</span>
+                  <span className="text-orange-500">${total.toFixed(2)}</span>
                 </div>
               </div>
               <Link href="/checkout">

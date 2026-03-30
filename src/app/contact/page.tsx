@@ -16,13 +16,13 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-surface-50">
-      <div className="bg-primary-600 py-16">
+      <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl font-bold text-white mb-4">
               {isZh ? '联系我们' : 'Contact Us'}
             </h1>
-            <p className="text-primary-100 text-lg max-w-2xl mx-auto">
+            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
               {isZh
                 ? '有任何问题或需求？我们随时为您服务'
                 : 'Have questions or needs? We are always here to help'}
@@ -41,8 +41,8 @@ export default function ContactPage() {
             <div className="space-y-6 mb-12">
               {contactInfo.map((info) => (
                 <div key={info.label} className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <info.icon className="w-6 h-6 text-primary-600" />
+                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <info.icon className="w-6 h-6 text-orange-600" />
                   </div>
                   <div>
                     <div className="font-semibold text-surface-900 mb-1">{info.label}</div>
@@ -52,9 +52,9 @@ export default function ContactPage() {
               ))}
             </div>
 
-            <div className="bg-primary-50 rounded-2xl p-6">
+            <div className="bg-orange-50 rounded-2xl p-6">
               <h3 className="font-bold text-surface-900 mb-3 flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-primary-600" />
+                <MessageCircle className="w-5 h-5 text-orange-500" />
                 {isZh ? '快速询价' : 'Quick Quote'}
               </h3>
               <p className="text-surface-600 text-sm mb-4">
@@ -62,7 +62,7 @@ export default function ContactPage() {
                   ? '如果您有明确的产品需求，可以直接填写询盘表单，我们将在24小时内回复'
                   : 'If you have specific product needs, fill out our inquiry form and we will respond within 24 hours'}
               </p>
-              <a href="/inquiry" className="inline-block bg-primary-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors">
+              <a href="/inquiry" className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-6 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-amber-600 transition-colors">
                 {isZh ? '填写询盘表单' : 'Fill Inquiry Form'}
               </a>
             </div>
@@ -99,7 +99,7 @@ export default function ContactPage() {
             ))}
           </div>
           <div className="text-center mt-6">
-            <a href="/faq" className="text-primary-600 font-medium hover:text-primary-700 transition-colors">
+            <a href="/faq" className="text-orange-500 font-medium hover:text-orange-600 transition-colors">
               {isZh ? '查看更多常见问题 →' : 'View all FAQs →'}
             </a>
           </div>

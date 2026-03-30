@@ -85,13 +85,13 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-surface-50">
-      <div className="bg-primary-600 py-16">
+      <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <h1 className="text-4xl font-bold text-white mb-4">
               {isZh ? '常见问题' : 'Frequently Asked Questions'}
             </h1>
-            <p className="text-primary-100 text-lg max-w-2xl mx-auto">
+            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
               {isZh
                 ? '找到您关心的问题答案，如有更多疑问请随时联系我们'
                 : 'Find answers to your questions. Contact us anytime if you have more inquiries'}
@@ -125,7 +125,7 @@ export default function FAQPage() {
                 >
                   <span className="font-semibold text-surface-900 pr-4">{displayQuestion}</span>
                   {openId === id ? (
-                    <ChevronUp className="w-5 h-5 text-primary-600 flex-shrink-0" />
+                    <ChevronUp className="w-5 h-5 text-orange-500 flex-shrink-0" />
                   ) : (
                     <ChevronDown className="w-5 h-5 text-surface-400 flex-shrink-0" />
                   )}
@@ -143,9 +143,9 @@ export default function FAQPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mt-12 bg-primary-50 rounded-2xl p-8 text-center"
+          className="mt-12 bg-orange-50 rounded-2xl p-8 text-center"
         >
-          <HelpCircle className="w-10 h-10 text-primary-600 mx-auto mb-4" />
+          <HelpCircle className="w-10 h-10 text-orange-500 mx-auto mb-4" />
           <h2 className="text-xl font-bold text-surface-900 mb-2">
             {isZh ? '没找到答案？' : "Can't find what you're looking for?"}
           </h2>
@@ -156,7 +156,7 @@ export default function FAQPage() {
           </p>
           <a
             href="/contact"
-            className="inline-block bg-primary-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-primary-700 transition-colors"
+            className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-amber-600 transition-colors"
           >
             {isZh ? '联系我们' : 'Contact Us'}
           </a>

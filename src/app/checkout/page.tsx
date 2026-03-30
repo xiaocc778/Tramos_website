@@ -68,7 +68,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen bg-surface-50">
-      <div className="bg-primary-600 py-16">
+      <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -78,7 +78,7 @@ export default function CheckoutPage() {
             <h1 className="text-4xl font-bold text-white mb-4">
               {isZh ? '结账' : 'Checkout'}
             </h1>
-            <p className="text-primary-100 text-lg">
+            <p className="text-orange-200 text-lg">
               {isZh ? '完成您的订单' : 'Complete your order'}
             </p>
           </motion.div>
@@ -164,7 +164,7 @@ export default function CheckoutPage() {
                   </h3>
                   <div className="border border-surface-200 rounded-xl p-4">
                     <div className="flex items-center gap-3 mb-4">
-                      <CreditCard className="w-5 h-5 text-primary-600" />
+                      <CreditCard className="w-5 h-5 text-orange-500" />
                       <span className="font-medium">{isZh ? '信用卡/借记卡' : 'Credit/Debit Card'}</span>
                     </div>
                     <div className="grid sm:grid-cols-2 gap-4">
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between font-bold text-lg pt-2 border-t">
                   <span>{isZh ? '总计' : 'Total'}</span>
-                  <span className="text-primary-600">${total.toFixed(2)}</span>
+                  <span className="text-orange-500">${total.toFixed(2)}</span>
                 </div>
               </div>
             </motion.div>
