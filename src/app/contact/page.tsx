@@ -5,7 +5,8 @@ import { Mail, Phone, MapPin, Clock, MessageCircle } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
 
 export default function ContactPage() {
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
 
   const contactInfo = [
     { icon: Phone, label: isZh ? '电话' : 'Phone', value: '+86 400-888-8888' },

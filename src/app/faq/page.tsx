@@ -18,7 +18,8 @@ interface FAQItem {
 }
 
 export default function FAQPage() {
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const { data: faqs = [] } = useFAQs();
   const [openId, setOpenId] = useState<string | null>(null);
 

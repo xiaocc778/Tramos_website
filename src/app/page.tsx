@@ -14,7 +14,8 @@ import {
 } from '@/components/sections';
 
 export default function HomePage() {
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
 
   return (
     <div>

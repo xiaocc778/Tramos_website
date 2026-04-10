@@ -11,7 +11,8 @@ import { ScrollReveal } from '@/components/shared';
 export default function ProjectDetailPage() {
   const params = useParams();
   const slug = params.slug as string;
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const { data: article, isLoading } = useArticle(slug);
 
   if (isLoading) {

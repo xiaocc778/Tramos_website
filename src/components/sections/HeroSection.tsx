@@ -1,15 +1,67 @@
 'use client';
 
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 interface HeroSectionProps {
   isZh?: boolean;
 }
 
+const HERO_SLIDES = [
+  {
+    src: '/images/products/solar-water-heater.jpg',
+    altEn: 'Solar water heater installation',
+    altZh: '太阳能热水器安装场景',
+  },
+  {
+    src: '/images/products/wall-water-heater.jpg',
+    altEn: 'Wall-mounted gas water heater',
+    altZh: '壁挂式燃气热水器',
+  },
+  {
+    src: '/images/products/water-heater-sink.jpg',
+    altEn: 'Electric water heater above sink',
+    altZh: '水槽上方电热水器',
+  },
+  {
+    src: '/images/products/solar-house-roof.jpg',
+    altEn: 'Residential solar hot water system',
+    altZh: '住宅太阳能热水系统',
+  },
+] as const;
+
+const INTERVAL_MS = 5500;
+
 export function HeroSection({ isZh = false }: HeroSectionProps) {
+  const [slideIndex, setSlideIndex] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    if (reducedMotion || paused) return;
+    const id = window.setInterval(
+      () => setSlideIndex((i) => (i + 1) % HERO_SLIDES.length),
+      INTERVAL_MS
+    );
+    return () => window.clearInterval(id);
+  }, [reducedMotion, paused]);
+
+  const goTo = useCallback((i: number) => {
+    setSlideIndex(i);
+  }, []);
+
   return (
     <section className="relative bg-gradient-to-br from-[#1B2A4A] via-[#1B3A5A] to-[#1B2A4A] overflow-hidden">
       {/* Background blobs */}
@@ -52,21 +104,59 @@ export function HeroSection({ isZh = false }: HeroSectionProps) {
             </div>
           </div>
 
-          {/* Right: Hero Image */}
+          {/* Right: Hero image carousel (gas / electric / solar narrative) */}
           <div className="relative hidden lg:block">
-            <div className="relative aspect-square max-w-lg mx-auto">
+            <div
+              className="relative aspect-square max-w-lg mx-auto"
+              onMouseEnter={() => setPaused(true)}
+              onMouseLeave={() => setPaused(false)}
+            >
               {/* Decorative shadow layers */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-600 rounded-3xl transform rotate-3 translate-x-3 translate-y-3 opacity-60" />
               <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-amber-500 rounded-3xl transform -rotate-2 translate-x-1 translate-y-1 opacity-80" />
-              <div className="relative rounded-3xl overflow-hidden bg-white shadow-2xl">
-                <Image
-                  src="/images/products/solar-water-heater.jpg"
-                  alt="Premium Water Heater"
-                  width={600}
-                  height={600}
-                  className="w-full h-full object-cover"
-                  priority
-                />
+              <div className="relative rounded-3xl overflow-hidden bg-white shadow-2xl aspect-square">
+                {HERO_SLIDES.map((slide, i) => (
+                  <div
+                    key={slide.src}
+                    className={cn(
+                      'absolute inset-0 transition-opacity duration-700 ease-out',
+                      i === slideIndex ? 'opacity-100 z-[1]' : 'opacity-0 z-0 pointer-events-none'
+                    )}
+                    aria-hidden={i !== slideIndex}
+                  >
+                    <Image
+                      src={slide.src}
+                      alt={isZh ? slide.altZh : slide.altEn}
+                      width={600}
+                      height={600}
+                      className="w-full h-full object-cover"
+                      priority={i === 0}
+                    />
+                  </div>
+                ))}
+                {/* Dots */}
+                <div
+                  className="absolute bottom-4 left-0 right-0 z-[2] flex justify-center gap-2"
+                  role="tablist"
+                  aria-label={isZh ? '轮播图' : 'Hero slides'}
+                >
+                  {HERO_SLIDES.map((_, i) => (
+                    <button
+                      key={i}
+                      type="button"
+                      role="tab"
+                      aria-selected={i === slideIndex}
+                      aria-label={isZh ? `第 ${i + 1} 张` : `Slide ${i + 1}`}
+                      className={cn(
+                        'h-2 rounded-full transition-all duration-300',
+                        i === slideIndex
+                          ? 'w-8 bg-white shadow-md'
+                          : 'w-2 bg-white/50 hover:bg-white/80'
+                      )}
+                      onClick={() => goTo(i)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 

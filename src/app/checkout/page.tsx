@@ -12,7 +12,8 @@ export default function CheckoutPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
   const { items, getTotal, clearCart } = useCartStore();
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const router = useRouter();
   const total = getTotal();
 

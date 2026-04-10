@@ -51,47 +51,98 @@ export interface Article {
   updated_at?: string;
 }
 
-// 订单类型
+// ============== 订单类型 ==============
+
 export interface Order {
   id: string;
-  items: OrderItem[];
-  customer_info: CustomerInfo;
-  shipping_info: ShippingInfo;
+  order_number: string;
+  customer_id?: string;
+  status: OrderStatus;
   subtotal: number;
-  shipping: number;
-  tax: number;
+  shipping_cost: number;
+  tax_amount: number;
   total: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  payment_status: 'pending' | 'paid' | 'failed' | 'refunded';
+  currency: string;
   payment_method?: string;
+  payment_status: PaymentStatus;
+  payment_intent_id?: string;
+  shipping_tracking_number?: string;
   notes?: string;
+  guest_email?: string;
+  guest_first_name?: string;
+  guest_last_name?: string;
+  guest_phone?: string;
+  guest_company?: string;
+  shipping_address_line1?: string;
+  shipping_address_line2?: string;
+  shipping_city?: string;
+  shipping_state?: string;
+  shipping_postal_code?: string;
+  shipping_country?: string;
+  shipping_phone?: string;
+  order_items?: OrderItem[];
   created_at: string;
   updated_at: string;
 }
 
+export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'refunded';
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'partially_refunded';
+
 export interface OrderItem {
+  id: string;
+  order_id: string;
   product_id: string;
   name: string;
-  name_zh: string;
+  name_zh?: string;
   price: number;
   quantity: number;
-  image: string;
   specifications?: Record<string, string>;
+  image_url?: string;
+  subtotal: number;
 }
 
 export interface CustomerInfo {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  phone: string;
+  phone?: string;
+  company?: string;
 }
 
 export interface ShippingInfo {
   address: string;
   city: string;
   state: string;
-  zip_code: string;
+  zipCode: string;
   country: string;
+  phone?: string;
+}
+
+// ============== 询盘类型 ==============
+
+export interface Inquiry {
+  id: string;
+  inquiry_number: string;
+  status: 'new' | 'reviewed' | 'responded' | 'converted' | 'closed';
+  name: string;
+  email: string;
+  phone?: string;
+  company?: string;
+  product_model?: string;
+  quantity?: number;
+  target_price?: number;
+  message: string;
+  response?: string;
+  responded_by?: string;
+  responded_at?: string;
+  created_at: string;
+}
+
+// ============== Stripe 类型 ==============
+
+export interface PaymentIntentResponse {
+  clientSecret: string;
+  paymentIntentId: string;
 }
 
 // ============== API 响应类型 ==============
@@ -126,7 +177,7 @@ export interface ArticleFilters {
   is_published?: boolean;
 }
 
-// ============== 前端专用类型（带方便使用的字段） ==============
+// ============== 前端专用类型 ==============
 
 export interface ProductCardProps {
   product: Product;

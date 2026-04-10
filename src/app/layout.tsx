@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Providers } from "@/components/providers";
+import { generateOrganizationSchema, generateWebSiteSchema } from "@/lib/seo/schema";
 
 const siteConfig = {
   name: 'HeatTech',
@@ -48,8 +49,20 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
+
+const jsonLdSchemas = [
+  generateOrganizationSchema(),
+  generateWebSiteSchema(),
+];
 
 export default function RootLayout({
   children,
@@ -59,6 +72,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen flex flex-col">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLdSchemas),
+          }}
+        />
         <Providers>
           <Header />
           <main className="flex-1 pt-16 lg:pt-20">

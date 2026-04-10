@@ -46,7 +46,8 @@ const socialLinks = [
 ];
 
 export function Footer() {
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const currentYear = new Date().getFullYear();
 
   return (

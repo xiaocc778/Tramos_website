@@ -9,7 +9,8 @@ import { useUIStore } from '@/lib/ui-store';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const total = getTotal();
 
   if (items.length === 0) {

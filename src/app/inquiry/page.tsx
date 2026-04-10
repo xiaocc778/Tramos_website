@@ -9,15 +9,47 @@ import { useUIStore } from '@/lib/ui-store';
 export default function InquiryPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const [error, setError] = useState<string | null>(null);
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsLoading(false);
-    setIsSubmitted(true);
+    setError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.get('name'),
+          email: formData.get('email'),
+          phone: formData.get('phone'),
+          company: formData.get('company'),
+          product_model: formData.get('product'),
+          quantity: formData.get('quantity') ? Number(formData.get('quantity')) : undefined,
+          target_price: formData.get('targetPrice') ? Number(formData.get('targetPrice')) : undefined,
+          message: formData.get('message'),
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to submit inquiry');
+      }
+
+      setIsSubmitted(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {

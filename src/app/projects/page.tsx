@@ -17,7 +17,8 @@ const typeFilters = [
 
 export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState('all');
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const { data: allArticles = [], isLoading } = useArticles({});
 
   const filtered = activeFilter === 'all'

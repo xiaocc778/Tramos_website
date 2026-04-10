@@ -6,28 +6,23 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { Search, Grid, List } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
-import { useProducts } from '@/hooks';
+import { useProducts, useCategories } from '@/hooks';
 import { ScrollReveal } from '@/components/shared';
 import { ProductSkeleton } from '@/components/shared';
-
-const staticCategories = [
-  { id: 'all', name: 'All Products', nameZh: '全部产品' },
-  { id: 'gas', name: 'Gas Heaters', nameZh: '燃气热水器' },
-  { id: 'electric', name: 'Electric Heaters', nameZh: '电热水器' },
-  { id: 'solar', name: 'Solar Heaters', nameZh: '太阳能热水器' },
-  { id: 'heat-pump', name: 'Heat Pumps', nameZh: '空气能热泵' },
-  { id: 'boiler', name: 'Boilers', nameZh: '锅炉' },
-];
+import { cn } from '@/lib/utils';
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
 
   const { data: products = [], isLoading, error } = useProducts({
     category: selectedCategory !== 'all' ? selectedCategory : undefined,
   });
+
+  const { data: categories = [] } = useCategories();
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = searchQuery === '' ||
@@ -76,23 +71,30 @@ export default function ProductsPage() {
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="px-4 py-3 rounded-xl border border-surface-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              {staticCategories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {isZh ? cat.nameZh : cat.name}
+              <option value="all">{isZh ? '全部产品' : 'All Products'}</option>
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.slug}>
+                  {isZh ? cat.name_zh : cat.name_en}
                 </option>
               ))}
             </select>
             <div className="flex border border-surface-200 rounded-xl overflow-hidden">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`p-3 ${viewMode === 'grid' ? 'bg-orange-500 text-white' : 'bg-white text-surface-600'}`}
+                className={cn(
+                  'p-3 transition-colors',
+                  viewMode === 'grid' ? 'bg-orange-500 text-white' : 'bg-white text-surface-600 hover:text-orange-500'
+                )}
                 aria-label="Grid view"
               >
                 <Grid className="w-5 h-5" />
               </button>
               <button
                 onClick={() => setViewMode('list')}
-                className={`p-3 ${viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-white text-surface-600'}`}
+                className={cn(
+                  'p-3 transition-colors',
+                  viewMode === 'list' ? 'bg-orange-500 text-white' : 'bg-white text-surface-600 hover:text-orange-500'
+                )}
                 aria-label="List view"
               >
                 <List className="w-5 h-5" />

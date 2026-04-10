@@ -16,7 +16,8 @@ export default function ProductDetailPage() {
   const slug = params.slug as string;
   const { data: product, isLoading, error } = useProduct(slug);
   const [quantity, setQuantity] = useState(1);
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const addItem = useCartStore((state) => state.addItem);
 
   const handleAddToCart = () => {

@@ -110,7 +110,8 @@ const solutions: Record<string, {
 
 export default function SolutionsPage() {
   const [activeTab, setActiveTab] = useState('residential');
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
   const { data: caseStudies = [] } = useArticles({ type: 'case_study' });
   const active = solutions[activeTab];
 

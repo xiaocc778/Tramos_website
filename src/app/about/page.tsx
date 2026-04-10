@@ -6,7 +6,8 @@ import { Globe, Leaf, Zap, Shield } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
 
 export default function AboutPage() {
-  const isZh = useUIStore.getState().preferences.language === 'zh';
+  const { preferences } = useUIStore();
+  const isZh = preferences.language === 'zh';
 
   const stats = [
     { num: '20+', label: isZh ? '年行业经验' : 'Years Experience', en: '20+' },
