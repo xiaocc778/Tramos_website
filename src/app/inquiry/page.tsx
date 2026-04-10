@@ -9,7 +9,7 @@ import { useUIStore } from '@/lib/ui-store';
 export default function InquiryPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const { preferences } = useUIStore();
   const isZh = preferences.language === 'zh';
 

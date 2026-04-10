@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import type { Order, CustomerInfo, ShippingInfo, OrderItem } from '@/types';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import type { CustomerInfo, ShippingInfo, OrderItem } from '@/types';
 
 const API_BASE = '/api';
 
