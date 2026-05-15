@@ -1,13 +1,21 @@
 import Stripe from 'stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('STRIPE_SECRET_KEY is not defined');
-}
+let stripeClient: Stripe | null = null;
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2026-02-25.clover',
-  typescript: true,
-});
+export function getStripe(): Stripe {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error('STRIPE_SECRET_KEY is not defined');
+  }
+
+  if (!stripeClient) {
+    stripeClient = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2026-02-25.clover',
+      typescript: true,
+    });
+  }
+
+  return stripeClient;
+}
 
 export interface CreatePaymentIntentInput {
   amount: number;
@@ -17,7 +25,7 @@ export interface CreatePaymentIntentInput {
 
 export const stripeService = {
   async createPaymentIntent(input: CreatePaymentIntentInput) {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount: Math.round(input.amount * 100), // Convert to cents
       currency: input.currency || 'usd',
       automatic_payment_methods: {
@@ -33,19 +41,19 @@ export const stripeService = {
   },
 
   async retrievePaymentIntent(paymentIntentId: string) {
-    return stripe.paymentIntents.retrieve(paymentIntentId);
+    return getStripe().paymentIntents.retrieve(paymentIntentId);
   },
 
   async confirmPaymentIntent(paymentIntentId: string) {
-    return stripe.paymentIntents.confirm(paymentIntentId);
+    return getStripe().paymentIntents.confirm(paymentIntentId);
   },
 
   async cancelPaymentIntent(paymentIntentId: string) {
-    return stripe.paymentIntents.cancel(paymentIntentId);
+    return getStripe().paymentIntents.cancel(paymentIntentId);
   },
 
   async createRefund(paymentIntentId: string, amount?: number) {
-    return stripe.refunds.create({
+    return getStripe().refunds.create({
       payment_intent: paymentIntentId,
       amount: amount ? Math.round(amount * 100) : undefined,
     });
