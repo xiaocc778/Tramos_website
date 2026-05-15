@@ -1,6 +1,6 @@
-// ============== 核心类型定义 ==============
+﻿// ============== 鏍稿績绫诲瀷瀹氫箟 ==============
 
-// 产品类型
+// 浜у搧绫诲瀷
 export interface Product {
   id: string;
   slug: string;
@@ -21,7 +21,7 @@ export interface Product {
   updated_at: string;
 }
 
-// 分类类型
+// 鍒嗙被绫诲瀷
 export interface Category {
   id: string;
   slug: string;
@@ -32,7 +32,7 @@ export interface Category {
   created_at: string;
 }
 
-// 文章/案例类型
+// 鏂囩珷/妗堜緥绫诲瀷
 export interface Article {
   id: string;
   slug: string;
@@ -51,7 +51,7 @@ export interface Article {
   updated_at?: string;
 }
 
-// ============== 订单类型 ==============
+// ============== 璁㈠崟绫诲瀷 ==============
 
 export interface Order {
   id: string;
@@ -118,7 +118,7 @@ export interface ShippingInfo {
   phone?: string;
 }
 
-// ============== 询盘类型 ==============
+// ============== 璇㈢洏绫诲瀷 ==============
 
 export interface Inquiry {
   id: string;
@@ -138,14 +138,7 @@ export interface Inquiry {
   created_at: string;
 }
 
-// ============== Stripe 类型 ==============
-
-export interface PaymentIntentResponse {
-  clientSecret: string;
-  paymentIntentId: string;
-}
-
-// ============== API 响应类型 ==============
+// ============== API 鍝嶅簲绫诲瀷 ==============
 
 export interface ApiResponse<T> {
   data?: T;
@@ -161,7 +154,7 @@ export interface PaginatedResponse<T> {
   totalPages: number;
 }
 
-// ============== 查询参数类型 ==============
+// ============== 鏌ヨ鍙傛暟绫诲瀷 ==============
 
 export interface ProductFilters {
   category?: string;
@@ -177,7 +170,7 @@ export interface ArticleFilters {
   is_published?: boolean;
 }
 
-// ============== 前端专用类型 ==============
+// ============== 鍓嶇涓撶敤绫诲瀷 ==============
 
 export interface ProductCardProps {
   product: Product;
@@ -188,3 +181,4 @@ export interface ArticleCardProps {
   article: Article;
   variant?: 'default' | 'compact' | 'featured';
 }
+

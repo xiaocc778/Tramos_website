@@ -43,7 +43,7 @@ export const orderService = {
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
-        customer_id: null, // For guest checkout
+        customer_id: null,
         guest_email: customerInfo?.email,
         guest_first_name: customerInfo?.firstName,
         guest_last_name: customerInfo?.lastName,

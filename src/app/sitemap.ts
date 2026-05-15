@@ -58,11 +58,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'never',
       priority: 0.3,
     },
-    {
-      url: `${baseUrl}/checkout`,
-      lastModified: new Date(),
-      changeFrequency: 'never',
-      priority: 0.2,
-    },
   ];
 }
