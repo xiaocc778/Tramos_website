@@ -10,6 +10,7 @@ import { useCartStore } from '@/lib/store';
 import { useUIStore } from '@/lib/ui-store';
 import { Button } from '@/components/ui';
 import { ScrollReveal } from '@/components/shared';
+import { imageAssets } from '@/lib/assets';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -63,7 +64,7 @@ export default function ProductDetailPage() {
 
   const specs = product.specifications || {};
   const specEntries = Object.entries(specs);
-  const imageUrl = product.images?.[0] || '/images/placeholder.png';
+  const imageUrl = product.images?.[0] || imageAssets.placeholder;
 
   return (
     <div className="min-h-screen bg-surface-50">

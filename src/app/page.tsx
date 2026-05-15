@@ -6,6 +6,7 @@ import {
   FeaturesSection,
   ProductCategorySection,
   StatsSection,
+  ManufacturingProofSection,
   FeaturedProductsSection,
   SolutionsSection,
   CaseStudiesSection,
@@ -23,6 +24,7 @@ export default function HomePage() {
       <FeaturesSection isZh={isZh} />
       <ProductCategorySection isZh={isZh} />
       <StatsSection isZh={isZh} />
+      <ManufacturingProofSection isZh={isZh} />
       <FeaturedProductsSection isZh={isZh} />
       <SolutionsSection isZh={isZh} />
       <CaseStudiesSection isZh={isZh} />

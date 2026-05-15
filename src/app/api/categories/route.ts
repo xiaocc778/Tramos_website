@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { fallbackCategories } from '@/lib/fallback-data';
 
 export async function GET(request: Request) {
   const supabase = await createServerClient();
@@ -15,6 +16,8 @@ export async function GET(request: Request) {
       .single();
 
     if (error) {
+      const fallbackCategory = fallbackCategories.find((category) => category.slug === slug);
+      if (fallbackCategory) return NextResponse.json(fallbackCategory);
       return NextResponse.json({ error: 'Category not found' }, { status: 404 });
     }
     return NextResponse.json(data);
@@ -28,7 +31,7 @@ export async function GET(request: Request) {
 
   if (error) {
     console.error('Supabase error:', error);
-    return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 });
+    return NextResponse.json(fallbackCategories);
   }
 
   return NextResponse.json(data || []);

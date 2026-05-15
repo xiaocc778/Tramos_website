@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { fallbackProducts } from '@/lib/fallback-data';
 
 export async function GET(request: Request) {
   const supabase = await createServerClient();
@@ -11,6 +12,15 @@ export async function GET(request: Request) {
   const minPrice = searchParams.get('minPrice');
   const maxPrice = searchParams.get('maxPrice');
   const inStock = searchParams.get('inStock');
+  const fallbackList = applyProductFallbackFilters({
+    slug,
+    category,
+    featured,
+    search,
+    minPrice,
+    maxPrice,
+    inStock,
+  });
 
   // 单个产品查询
   if (slug) {
@@ -22,6 +32,8 @@ export async function GET(request: Request) {
       .single();
 
     if (error) {
+      const fallbackProduct = fallbackList[0];
+      if (fallbackProduct) return NextResponse.json(fallbackProduct);
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
     return NextResponse.json(data);
@@ -64,10 +76,37 @@ export async function GET(request: Request) {
 
   if (error) {
     console.error('Supabase error:', error);
-    return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+    return NextResponse.json(fallbackList);
   }
 
   return NextResponse.json(data || []);
+}
+
+function applyProductFallbackFilters(filters: {
+  slug: string | null;
+  category: string | null;
+  featured: string | null;
+  search: string | null;
+  minPrice: string | null;
+  maxPrice: string | null;
+  inStock: string | null;
+}) {
+  return fallbackProducts.filter((product) => {
+    if (filters.slug && product.slug !== filters.slug) return false;
+    if (filters.category && filters.category !== 'all') {
+      if (product.category_id !== filters.category && product.category_slug !== filters.category) return false;
+    }
+    if (filters.featured === 'true' && !product.is_featured) return false;
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      const haystack = `${product.name_en} ${product.name_zh} ${product.description_en} ${product.description_zh}`.toLowerCase();
+      if (!haystack.includes(q)) return false;
+    }
+    if (filters.minPrice && product.price < Number(filters.minPrice)) return false;
+    if (filters.maxPrice && product.price > Number(filters.maxPrice)) return false;
+    if (filters.inStock === 'true' && product.stock_status === 'out_of_stock') return false;
+    return true;
+  });
 }
 
 export async function POST(request: Request) {

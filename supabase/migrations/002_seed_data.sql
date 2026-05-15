@@ -27,7 +27,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "10L/min", "type": "instant", "ignition": "automatic", "display": "LED", "safety": "flue-gas", "rated_power": "20kW"}'::jsonb,
 '["gas", "instant", "compact"],["10L", "digital"]'::text[],
-'{"images": ["/images/products/wall-water-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.1/微信图片_20260515153010_425_34.jpg', '/images/products/New_model_product/no.1/微信图片_20260515153011_427_34.jpg']),
 
 ('gas-instant-16l-pro', 'Pro Instant Gas Water Heater 16L', 'Pro 即热式燃气热水器 16L',
 'Professional grade instant gas water heater with 16L/min flow rate. Suitable for multi-bathroom homes.',
@@ -37,7 +37,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "16L/min", "type": "instant", "ignition": "automatic", "display": "LCD", "safety": "flue-gas, overheat", "rated_power": "32kW", "water_pressure": "0.02-1.0MPa"}'::jsonb,
 '["gas", "instant", "professional"]'::text[],
-'{"images": ["/images/products/wall-water-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.2/微信图片_20260515153032_432_34.jpg', '/images/products/New_model_product/no.2/微信图片_20260515153041_436_34.jpg']),
 
 ('gas-storage-50l', 'Storage Gas Water Heater 50L', '储水式燃气热水器 50L',
 '50L storage gas water heater with enamel coating tank for durability. Suitable for small families.',
@@ -47,7 +47,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', FALSE,
 '{"capacity": "50L", "type": "storage", "tank": "enamel", "rated_power": "12kW", "water_pressure": "0.02-0.8MPa", "energy_rating": "2-star"}'::jsonb,
 '["gas", "storage", "50L"]'::text[],
-'{"images": ["/images/products/gas-storage-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.4/微信图片_20260515153106_442_34.jpg', '/images/products/New_model_product/no.4/微信图片_20260515153108_444_34.jpg']),
 
 -- Electric Heaters
 ('electric-tank-30l', 'Electric Water Heater Tank 30L', '电热水器 储水式 30L',
@@ -58,7 +58,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "30L", "type": "storage", "tank": "glass enamel", "rated_power": "1.5kW", "voltage": "220V", "water_pressure": "0.8MPa", "heating_time": "50min"}'::jsonb,
 '["electric", "storage", "compact"]'::text[],
-'{"images": ["/images/products/water-heater-sink.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.1/微信图片_20260515153010_425_34.jpg', '/images/products/New_model_product/no.1/微信图片_20260515153015_431_34.jpg']),
 
 ('electric-tank-60l', 'Electric Water Heater Tank 60L', '电热水器 储水式 60L',
 '60L mid-size electric water heater with smart temperature control. Suitable for 2-3 person household.',
@@ -68,7 +68,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "60L", "type": "storage", "tank": "glass enamel", "rated_power": "2kW", "voltage": "220V", "water_pressure": "0.8MPa", "heating_time": "75min", "smart_control": true}'::jsonb,
 '["electric", "storage", "smart"]'::text[],
-'{"images": ["/images/products/water-heater-sink.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.3/微信图片_20260515153034_433_34.jpg', '/images/products/New_model_product/no.3/微信图片_20260515153105_441_34.jpg']),
 
 ('electric-tank-80l', 'Electric Water Heater Tank 80L', '电热水器 储水式 80L',
 '80L large capacity electric water heater with rapid heating. Suitable for family of 4-5.',
@@ -78,7 +78,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'low_stock', FALSE,
 '{"capacity": "80L", "type": "storage", "tank": "glass enamel", "rated_power": "2.5kW", "voltage": "220V", "water_pressure": "0.8MPa", "heating_time": "60min", "rapid_heating": true}''::jsonb,
 '["electric", "storage", "large"]'::text[],
-'{"images": ["/images/products/water-heater-sink.jpg"]}'::jsonb),
+ARRAY['/images/products/New_model_product/no.4/微信图片_20260515153106_442_34.jpg', '/images/products/New_model_product/no.4/微信图片_20260515153111_447_34.jpg']),
 
 -- Solar Heaters
 ('solar-flat-200l', 'Flat Panel Solar Water Heater 200L', '平板太阳能热水器 200L',
@@ -89,7 +89,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "200L", "type": "flat panel", "collector_area": "2.5m2", "backup_power": "1.5kW", "tank": "stainless steel", "working_pressure": "0.6MPa", "heat_preservation": "72h"}'::jsonb,
 '["solar", "flat panel", "eco-friendly"]'::text[],
-'{"images": ["/images/products/solar-water-heater.jpg", "/images/products/solar-house-roof.jpg"]}'::jsonb),
+ARRAY['/images/products/general_materials/solar-water-heater.jpg', '/images/products/general_materials/solar-house-roof.jpg']),
 
 ('solar-evacuated-180l', 'Evacuated Tube Solar Heater 180L', '真空管太阳能热水器 180L',
 'High-efficiency evacuated tube solar water heater with 180L capacity. Excellent winter performance.',
@@ -99,7 +99,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', FALSE,
 '{"capacity": "180L", "type": "evacuated tube", "tubes": "20", "collector_efficiency": "95%", "tank": "stainless steel", "working_pressure": "0.6MPa", "heat_preservation": "48h"}'::jsonb,
 '["solar", "evacuated tube", "high-efficiency"]'::text[],
-'{"images": ["/images/products/solar-water-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/general_materials/solar-water-heater.jpg', '/images/products/general_materials/solar-panel-rooftop.jpg']),
 
 -- Heat Pumps
 ('heatpump-200l', 'Heat Pump Water Heater 200L', '空气能热泵热水器 200L',
@@ -110,7 +110,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"capacity": "200L", "type": "heat pump", "cop": "4.0", "rated_power": "0.75kW", "voltage": "220V", "working_temp": "-10 to 45C", "noise_level": "45dB", "refrigerant": "R410A"}'::jsonb,
 '["heat pump", "energy-saving", "eco"]'::text[],
-'{"images": ["/images/products/heat-pump-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/general_materials/industrial-boiler-closeup.jpg', '/images/lifestyle/factory-machinery.jpg']),
 
 ('heatpump-300l-commercial', 'Commercial Heat Pump 300L', '商用空气能热泵 300L',
 'Commercial grade heat pump water heater with 300L capacity. Built for heavy-duty use in hotels and gyms.',
@@ -120,7 +120,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', FALSE,
 '{"capacity": "300L", "type": "heat pump", "cop": "4.2", "rated_power": "1.2kW", "voltage": "380V", "working_temp": "-15 to 45C", "noise_level": "55dB", "refrigerant": "R410A", "commercial": true}'::jsonb,
 '["heat pump", "commercial", "heavy-duty"]'::text[],
-'{"images": ["/images/products/heat-pump-heater.jpg"]}'::jsonb),
+ARRAY['/images/products/general_materials/industrial-boiler-closeup.jpg', '/images/lifestyle/factory-production.jpg']),
 
 -- Boilers
 ('boiler-gas-98kw', 'Commercial Gas Boiler 98kW', '商用燃气锅炉 98kW',
@@ -131,7 +131,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'in_stock', TRUE,
 '{"power": "98kW", "type": "gas", "efficiency": "95%", "fuel": "natural gas/LPG", "voltage": "220V", "water_pressure": "1.0MPa", "weight": "120kg", "dimensions": "800x600x1200mm"}'::jsonb,
 '["boiler", "commercial", "gas"]'::text[],
-'{"images": ["/images/products/commercial-boiler.jpg"]}'::jsonb),
+ARRAY['/images/products/general_materials/gas-boiler.jpg', '/images/products/general_materials/industrial-boiler-closeup.jpg']),
 
 ('boiler-electric-36kw', 'Electric Steam Boiler 36kW', '电蒸汽锅炉 36kW',
 '36kW electric steam boiler for light commercial use. Clean and easy to install.',
@@ -141,7 +141,7 @@ INSERT INTO products (slug, name_en, name_zh, description_en, description_zh, pr
 'low_stock', FALSE,
 '{"power": "36kW", "type": "electric steam", "efficiency": "98%", "voltage": "380V", "steam_output": "50kg/h", "working_pressure": "0.7MPa", "weight": "80kg"}'::jsonb,
 '["boiler", "electric", "steam"]'::text[],
-'{"images": ["/images/products/electric-boiler.jpg"]}'::jsonb);
+ARRAY['/images/products/general_materials/industrial-boiler-closeup.jpg', '/images/products/general_materials/gas-flame-blue.jpg']);
 
 -- ============================================
 -- Articles Seed Data

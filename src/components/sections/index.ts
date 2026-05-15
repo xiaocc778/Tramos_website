@@ -2,6 +2,7 @@ export { HeroSection } from './HeroSection';
 export { FeaturesSection } from './FeaturesSection';
 export { ProductCategorySection } from './ProductCategorySection';
 export { StatsSection } from './StatsSection';
+export { ManufacturingProofSection } from './ManufacturingProofSection';
 export { FeaturedProductsSection } from './FeaturedProductsSection';
 export { SolutionsSection } from './SolutionsSection';
 export { CaseStudiesSection } from './CaseStudiesSection';

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { fallbackArticles } from '@/lib/fallback-data';
 
 export async function GET(request: Request) {
   const supabase = await createServerClient();
@@ -7,6 +8,12 @@ export async function GET(request: Request) {
   const type = searchParams.get('type');
   const slug = searchParams.get('slug');
   const published = searchParams.get('published');
+  const fallbackList = fallbackArticles.filter((article) => {
+    if (slug && article.slug !== slug) return false;
+    if (type && article.type !== type) return false;
+    if (published !== 'false' && !article.is_published) return false;
+    return true;
+  });
 
   // 单篇文章查询
   if (slug) {
@@ -18,6 +25,8 @@ export async function GET(request: Request) {
       .single();
 
     if (error) {
+      const fallbackArticle = fallbackList[0];
+      if (fallbackArticle) return NextResponse.json(fallbackArticle);
       return NextResponse.json({ error: 'Article not found' }, { status: 404 });
     }
     return NextResponse.json(data);
@@ -41,7 +50,7 @@ export async function GET(request: Request) {
 
   if (error) {
     console.error('Supabase error:', error);
-    return NextResponse.json({ error: 'Failed to fetch articles' }, { status: 500 });
+    return NextResponse.json(fallbackList);
   }
 
   return NextResponse.json(data || []);

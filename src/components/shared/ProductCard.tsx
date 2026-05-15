@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import type { Product } from '@/lib/types';
+import { imageAssets } from '@/lib/assets';
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +15,7 @@ interface ProductCardProps {
 export function ProductCard({ product, isZh = false, className = '' }: ProductCardProps) {
   const name = isZh ? product.name_zh : product.name_en;
   const description = isZh ? product.description_zh : product.description_en;
-  const imageUrl = product.images?.[0] || '/images/placeholder.png';
+  const imageUrl = product.images?.[0] || imageAssets.placeholder;
 
   return (
     <Link href={`/products/${product.slug}`} className={`block ${className}`}>

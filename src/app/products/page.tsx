@@ -10,6 +10,7 @@ import { useProducts, useCategories } from '@/hooks';
 import { ScrollReveal } from '@/components/shared';
 import { ProductSkeleton } from '@/components/shared';
 import { cn } from '@/lib/utils';
+import { imageAssets } from '@/lib/assets';
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -134,7 +135,7 @@ export default function ProductsPage() {
                     <div className="group bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300 h-full flex flex-col">
                       <div className="aspect-[4/3] overflow-hidden relative bg-surface-100">
                         <Image
-                          src={product.images?.[0] || '/images/placeholder.png'}
+                          src={product.images?.[0] || imageAssets.placeholder}
                           alt={isZh ? product.name_zh : product.name_en}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-300"

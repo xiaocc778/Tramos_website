@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import type { Article } from '@/lib/types';
+import { imageAssets } from '@/lib/assets';
 
 interface ArticleCardProps {
   article: Article;
@@ -20,7 +21,7 @@ export function ArticleCard({
 }: ArticleCardProps) {
   const title = isZh ? article.title_zh : article.title_en;
   const excerpt = isZh ? article.excerpt_zh : article.excerpt_en;
-  const imageUrl = article.featured_image || '/images/placeholder.png';
+  const imageUrl = article.featured_image || imageAssets.placeholder;
   const dateStr = article.published_at ?? article.created_at;
 
   return (

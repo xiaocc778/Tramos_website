@@ -7,6 +7,7 @@ import { useUIStore } from '@/lib/ui-store';
 import { useArticle } from '@/hooks';
 import { Button } from '@/components/ui';
 import { ScrollReveal } from '@/components/shared';
+import { imageAssets } from '@/lib/assets';
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -41,7 +42,7 @@ export default function ProjectDetailPage() {
     );
   }
 
-  const imageUrl = article.featured_image || '/images/placeholder.png';
+  const imageUrl = article.featured_image || imageAssets.placeholder;
   const content = isZh ? article.content_zh : article.content_en;
   const title = isZh ? article.title_zh : article.title_en;
 
