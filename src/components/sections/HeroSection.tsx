@@ -47,16 +47,6 @@ export function HeroSection({ isZh = false }: HeroSectionProps) {
 
       <div className="relative mx-auto flex min-h-[720px] max-w-7xl flex-col justify-end px-4 pb-8 pt-28 sm:px-6 lg:px-8 lg:pb-10">
         <div className="max-w-3xl pb-10">
-          <div className="mb-7 inline-flex rounded-xl bg-white/94 px-5 py-3 shadow-2xl shadow-black/20 backdrop-blur">
-            <Image
-              src="/images/logo/3.png"
-              alt="Tramos"
-              width={300}
-              height={75}
-              priority
-              className="h-14 w-auto object-contain sm:h-16 lg:h-[72px]"
-            />
-          </div>
           <p className="mb-5 text-sm font-semibold uppercase tracking-[0.22em] text-orange-300">
             {isZh ? '真实制造商 · 热水系统 · 全球供应' : 'Real manufacturer · hot water systems · global supply'}
           </p>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ClipboardList, Globe, Menu, Moon, Sun, X } from 'lucide-react';
@@ -23,6 +22,38 @@ const navItems: NavItem[] = [
   { label: 'About', labelZh: '关于我们', href: '/about' },
   { label: 'Contact', labelZh: '联系我们', href: '/contact' },
 ];
+
+function TramosLogo({ compact = false }: { compact?: boolean }) {
+  return (
+    <span className="inline-flex items-center gap-2" aria-hidden="true">
+      <svg
+        viewBox="0 0 64 48"
+        className={cn('h-8 w-11 text-surface-950', compact ? 'h-7 w-10' : 'lg:h-9 lg:w-12')}
+        role="img"
+      >
+        <path
+          d="M7 10H27C30.4 10 33 12.6 33 16V20H20C12.8 20 7 15.1 7 10Z"
+          fill="currentColor"
+        />
+        <path
+          d="M57 10H37C33.6 10 31 12.6 31 16V20H44C51.2 20 57 15.1 57 10Z"
+          fill="currentColor"
+        />
+        <path d="M24 22H31V44C27 43.2 24 39.7 24 35.5V22Z" fill="currentColor" />
+        <path d="M33 22H40V35.5C40 39.7 37 43.2 33 44V22Z" fill="currentColor" />
+        <path d="M25 8H39L32 18L25 8Z" fill="#5B4BFF" />
+      </svg>
+      <span
+        className={cn(
+          'font-semibold lowercase tracking-[0.08em] text-surface-950',
+          compact ? 'text-xl' : 'text-2xl lg:text-[28px]'
+        )}
+      >
+        tramos
+      </span>
+    </span>
+  );
+}
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -49,15 +80,8 @@ export function Header() {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between lg:h-20">
-            <Link href="/" className="flex items-center" aria-label="Tramos home">
-              <Image
-                src="/images/logo/3.png"
-                alt="Tramos"
-                width={180}
-                height={45}
-                priority
-                className="h-9 w-auto object-contain lg:h-11"
-              />
+            <Link href="/" className="flex items-center rounded-lg py-1" aria-label="Tramos home">
+              <TramosLogo />
             </Link>
 
             <nav className="hidden items-center gap-1 lg:flex">
@@ -135,13 +159,7 @@ export function Header() {
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b p-4">
                   <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center" aria-label="Tramos home">
-                    <Image
-                      src="/images/logo/3.png"
-                      alt="Tramos"
-                      width={150}
-                      height={38}
-                      className="h-8 w-auto object-contain"
-                    />
+                    <TramosLogo compact />
                   </Link>
                   <button onClick={() => setMobileOpen(false)} className="p-2 text-surface-600 hover:text-orange-500" aria-label="Close menu">
                     <X className="h-6 w-6" />
