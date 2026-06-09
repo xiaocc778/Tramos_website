@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
 
 const footerLinks = {
@@ -10,40 +10,34 @@ const footerLinks = {
     titleZh: '产品',
     links: [
       { href: '/products', label: 'All Products', labelZh: '全部产品' },
-      { href: '/products?category=gas', label: 'Gas Heaters', labelZh: '燃气热水器' },
-      { href: '/products?category=electric', label: 'Electric Heaters', labelZh: '电热水器' },
-      { href: '/products?category=solar', label: 'Solar Heaters', labelZh: '太阳能热水器' },
-      { href: '/products?category=heat-pump', label: 'Heat Pumps', labelZh: '空气能热泵' },
+      { href: '/products?category=electric', label: 'Electric Water Heaters', labelZh: '电热水器' },
+      { href: '/products?category=gas', label: 'Gas Water Heaters', labelZh: '燃气热水器' },
+      { href: '/products?category=solar', label: 'Solar Water Heaters', labelZh: '太阳能热水器' },
+      { href: '/products?category=heat-pump', label: 'Heat Pump Water Heaters', labelZh: '空气能热泵热水器' },
+      { href: '/products?category=commercial', label: 'Commercial Systems', labelZh: '商用热水系统' },
     ],
   },
   company: {
     title: 'Company',
     titleZh: '公司',
     links: [
-      { href: '/about', label: 'About Us', labelZh: '关于我们' },
+      { href: '/about', label: 'About Tramos', labelZh: '关于 Tramos' },
       { href: '/projects', label: 'Projects', labelZh: '项目案例' },
       { href: '/solutions', label: 'Solutions', labelZh: '解决方案' },
       { href: '/contact', label: 'Contact', labelZh: '联系我们' },
     ],
   },
   support: {
-    title: 'Support',
-    titleZh: '支持',
+    title: 'Buyer Support',
+    titleZh: '采购支持',
     links: [
       { href: '/faq', label: 'FAQ', labelZh: '常见问题' },
-      { href: '/inquiry', label: 'Get Quote', labelZh: '询价' },
-      { href: '/contact', label: 'Contact Us', labelZh: '联系我们' },
+      { href: '/inquiry', label: 'Request Quote', labelZh: '获取报价' },
+      { href: '/solutions#b2b', label: 'OEM / ODM', labelZh: 'OEM / ODM' },
       { href: '/about#certifications', label: 'Certifications', labelZh: '资质认证' },
     ],
   },
 };
-
-const socialLinks = [
-  { icon: Facebook, href: '#', label: 'Facebook' },
-  { icon: Twitter, href: '#', label: 'Twitter' },
-  { icon: Instagram, href: '#', label: 'Instagram' },
-  { icon: Linkedin, href: '#', label: 'LinkedIn' },
-];
 
 export function Footer() {
   const { preferences } = useUIStore();
@@ -52,47 +46,46 @@ export function Footer() {
 
   return (
     <footer className="bg-[#1B2A4A] text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand */}
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           <div>
-            <Link href="/" className="inline-block text-2xl font-bold text-white mb-4">
-              {isZh ? '热能科技' : 'HeatTech'}
+            <Link href="/" className="mb-4 inline-block text-2xl font-bold text-white">
+              Tramos
             </Link>
-            <p className="text-gray-400 mb-6 max-w-xs">
+            <p className="mb-6 max-w-xs text-gray-400">
               {isZh
-                ? '专注于高品质热水器研发与制造，为全球客户提供可靠的热水解决方案。'
-                : 'Specializing in high-quality water heater R&D and manufacturing, providing reliable hot water solutions for global customers.'}
+                ? '面向全球采购商的热水器与商用热水系统制造商，支持产品定制、项目配套与长期供货。'
+                : 'A water heater and commercial hot water system manufacturer for global buyers, supporting OEM/ODM, project supply, and long-term distribution.'}
             </p>
             <div className="space-y-3">
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-orange-400 flex-shrink-0" />
-                <span className="text-sm">contact@heatertech.com</span>
+              <div className="flex items-center gap-3">
+                <Mail className="h-5 w-5 flex-shrink-0 text-orange-400" />
+                <span className="text-sm">sales@tramos-heating.com</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-orange-400 flex-shrink-0" />
+              <div className="flex items-center gap-3">
+                <Phone className="h-5 w-5 flex-shrink-0 text-orange-400" />
                 <span className="text-sm">+86 400-888-8888</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-orange-400 flex-shrink-0" />
-                <span className="text-sm">{isZh ? '广东省佛山市顺德区' : 'Shunde District, Foshan, Guangdong'}</span>
+              <div className="flex items-center gap-3">
+                <Clock className="h-5 w-5 flex-shrink-0 text-orange-400" />
+                <span className="text-sm">{isZh ? '周一至周五 9:00-18:00' : 'Mon-Fri 9:00-18:00'}</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin className="h-5 w-5 flex-shrink-0 text-orange-400" />
+                <span className="text-sm">{isZh ? '广东佛山顺德' : 'Shunde District, Foshan, Guangdong'}</span>
               </div>
             </div>
           </div>
 
-          {/* Links */}
           {Object.entries(footerLinks).map(([key, section]) => (
             <div key={key}>
-              <h3 className="text-white font-semibold mb-4">
+              <h3 className="mb-4 font-semibold text-white">
                 {isZh ? section.titleZh : section.title}
               </h3>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm hover:text-orange-400 transition-colors"
-                    >
+                    <Link href={link.href} className="text-sm transition-colors hover:text-orange-400">
                       {isZh ? link.labelZh : link.label}
                     </Link>
                   </li>
@@ -102,23 +95,11 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom */}
-        <div className="border-t border-orange-900/30 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-gray-500">
-            &copy; {currentYear} HeatTech. {isZh ? '保留所有权利。' : 'All rights reserved.'}
+        <div className="mt-12 flex flex-col gap-4 border-t border-orange-900/30 pt-8 text-sm text-gray-500 md:flex-row md:items-center md:justify-between">
+          <p>
+            &copy; {currentYear} Tramos. {isZh ? '保留所有权利。' : 'All rights reserved.'}
           </p>
-          <div className="flex items-center space-x-4">
-            {socialLinks.map((social) => (
-              <a
-                key={social.label}
-                href={social.href}
-                className="p-2 text-gray-400 hover:text-orange-400 transition-colors rounded-lg hover:bg-orange-500/10"
-                aria-label={social.label}
-              >
-                <social.icon className="w-5 h-5" />
-              </a>
-            ))}
-          </div>
+          <p>{isZh ? 'OEM/ODM | 项目方案 | 出口支持' : 'OEM/ODM | Project Solutions | Export Support'}</p>
         </div>
       </div>
     </footer>

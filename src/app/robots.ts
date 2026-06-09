@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com';
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://tramos-site.vercel.app';
 
   return {
     rules: {

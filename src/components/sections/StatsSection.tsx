@@ -10,10 +10,10 @@ interface StatsSectionProps {
 }
 
 const stats = [
-  { value: 20, suffix: '+', label: 'Years in heating equipment', labelZh: '年热水设备经验' },
-  { value: 6, suffix: '', label: 'Patent-backed systems', labelZh: '项专利技术背书' },
-  { value: 4, suffix: '', label: 'Core product families', labelZh: '大核心产品系列' },
-  { value: 2, suffix: '', label: 'B2B and B2C channels', labelZh: '类业务渠道' },
+  { value: 20, suffix: '+', label: 'Years of manufacturing experience', labelZh: '年制造经验' },
+  { value: 50, suffix: '+', label: 'Export markets supported', labelZh: '出口市场' },
+  { value: 100, suffix: '+', label: 'B2B customers and projects', labelZh: 'B2B 客户与项目' },
+  { value: 500, suffix: 'K+', label: 'Annual production capacity', labelZh: '年产能' },
 ];
 
 function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
@@ -76,9 +76,9 @@ export function StatsSection({ isZh = false }: StatsSectionProps) {
         <ScrollReveal className="mb-12">
           <SectionHeader
             title="Operational Signals Buyers Can Verify"
-            titleZh="买家可以验证的经营信号"
-            subtitle="Use real factory, product, and certification assets as proof points across the site."
-            subtitleZh="用真实工厂、产品和资质素材支撑网站可信度。"
+            titleZh="采购商可以核验的运营能力"
+            subtitle="Use factory capability, export support, and production scale as practical proof points."
+            subtitleZh="用工厂能力、出口支持和产能规模支撑采购决策。"
             isZh={isZh}
             light
           />

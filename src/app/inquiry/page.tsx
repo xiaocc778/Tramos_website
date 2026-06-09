@@ -1,17 +1,38 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Send, CheckCircle } from 'lucide-react';
+import { CheckCircle, Clock, Mail, MessageCircle, Send } from 'lucide-react';
 import { Button, Input, Textarea } from '@/components/ui';
 import { useUIStore } from '@/lib/ui-store';
+
+const productCategories = [
+  'Electric Water Heaters',
+  'Gas Water Heaters',
+  'Solar Water Heaters',
+  'Heat Pump Water Heaters',
+  'Commercial Systems',
+  'OEM / ODM Partnership',
+];
 
 export default function InquiryPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(productCategories[0]);
   const [, setError] = useState<string | null>(null);
   const { preferences } = useUIStore();
   const isZh = preferences.language === 'zh';
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+    const product = params.get('product');
+    if (category) {
+      const matched = productCategories.find((item) => item.toLowerCase().includes(category));
+      if (matched) setSelectedCategory(matched);
+    }
+    if (product) setSelectedCategory(product);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,6 +41,7 @@ export default function InquiryPage() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const quantityValue = String(formData.get('quantity') || '').trim();
 
     try {
       const response = await fetch('/api/inquiries', {
@@ -33,9 +55,9 @@ export default function InquiryPage() {
           phone: formData.get('phone'),
           company: formData.get('company'),
           product_model: formData.get('product'),
-          quantity: formData.get('quantity') ? Number(formData.get('quantity')) : undefined,
+          quantity: /^\d+$/.test(quantityValue) ? Number(quantityValue) : undefined,
           target_price: formData.get('targetPrice') ? Number(formData.get('targetPrice')) : undefined,
-          message: formData.get('message'),
+          message: `Quantity: ${quantityValue || 'Not specified'}\n\n${formData.get('message')}`,
         }),
       });
 
@@ -54,22 +76,18 @@ export default function InquiryPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-surface-50 flex items-center justify-center py-20">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center px-4"
-        >
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
-            <CheckCircle className="w-10 h-10 text-green-600" />
+      <div className="flex min-h-screen items-center justify-center bg-surface-50 py-20">
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="px-4 text-center">
+          <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+            <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-surface-900 mb-4">
-            {isZh ? '提交成功！' : 'Submission Successful!'}
+          <h2 className="mb-4 text-2xl font-bold text-surface-900">
+            {isZh ? '提交成功' : 'Submission Successful'}
           </h2>
-          <p className="text-surface-600 mb-8 max-w-md">
+          <p className="mb-8 max-w-md text-surface-600">
             {isZh
-              ? '感谢您的询盘。我们的专业团队将在24小时内与您联系，提供详细的报价和解决方案。'
-              : 'Thank you for your inquiry. Our professional team will contact you within 24 hours with a detailed quote and solution.'}
+              ? '感谢您的询盘。Tramos 销售团队会在 24 小时内回复，并提供报价或选型建议。'
+              : 'Thank you for your inquiry. The Tramos sales team will respond within 24 hours with a quote or product recommendation.'}
           </p>
           <Button onClick={() => setIsSubmitted(false)}>
             {isZh ? '提交新的询盘' : 'Submit Another Inquiry'}
@@ -82,130 +100,99 @@ export default function InquiryPage() {
   return (
     <div className="min-h-screen bg-surface-50">
       <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl font-bold text-white mb-4">
-              {isZh ? '询盘中心' : 'Request a Quote'}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
+            <h1 className="mb-4 text-4xl font-bold text-white">
+              {isZh ? '提交询盘' : 'Request a Quote'}
             </h1>
-            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-orange-200">
               {isZh
-                ? '告诉我们您的需求，获取专业定制方案和优惠报价'
-                : 'Tell us your needs and get a customized solution with competitive pricing'}
+                ? '告诉我们容量、电压、数量、认证和目的地国家，获取更准确的产品建议与报价。'
+                : 'Share capacity, voltage, quantity, certification needs, and destination country for a more accurate quote.'}
             </p>
           </motion.div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-white rounded-2xl shadow-soft p-8"
-        >
+      <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="rounded-2xl bg-white p-8 shadow-soft">
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid sm:grid-cols-2 gap-6">
-              <Input
-                label={isZh ? '姓名 *' : 'Name *'}
-                name="name"
-                required
-                placeholder={isZh ? '请输入您的姓名' : 'Enter your name'}
-              />
-              <Input
-                label={isZh ? '公司名称' : 'Company Name'}
-                name="company"
-                placeholder={isZh ? '请输入公司名称' : 'Enter company name'}
-              />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Input label={isZh ? '姓名 *' : 'Name *'} name="name" required placeholder={isZh ? '请输入您的姓名' : 'Enter your name'} />
+              <Input label={isZh ? '公司名称' : 'Company Name'} name="company" placeholder={isZh ? '请输入公司名称' : 'Enter company name'} />
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
-              <Input
-                label={isZh ? '邮箱 *' : 'Email *'}
-                name="email"
-                type="email"
-                required
-                placeholder={isZh ? 'your@email.com' : 'your@email.com'}
-              />
-              <Input
-                label={isZh ? '电话' : 'Phone'}
-                name="phone"
-                type="tel"
-                placeholder={isZh ? '+86 xxx xxxx xxxx' : '+86 xxx xxxx xxxx'}
-              />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Input label={isZh ? '邮箱 *' : 'Email *'} name="email" type="email" required placeholder="your@email.com" />
+              <Input label={isZh ? '电话 / WhatsApp' : 'Phone / WhatsApp'} name="phone" type="tel" placeholder="+86 xxx xxxx xxxx" />
             </div>
 
-            <Input
-              label={isZh ? '产品型号/类别' : 'Product Model/Category'}
-              name="product"
-              placeholder={isZh ? '例如：燃气热水器 12L' : 'e.g., Gas Water Heater 12L'}
-            />
+            <div>
+              <label htmlFor="product-category" className="mb-1.5 block text-sm font-medium text-surface-700">
+                {isZh ? '产品型号 / 分类' : 'Product Model / Category'}
+              </label>
+              <select
+                id="product-category"
+                name="product"
+                value={selectedCategory}
+                onChange={(event) => setSelectedCategory(event.target.value)}
+                className="w-full rounded-lg border border-surface-300 bg-white px-4 py-2.5 text-surface-900 transition-all duration-200 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                {productCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <div className="grid sm:grid-cols-2 gap-6">
+            <div className="grid gap-6 sm:grid-cols-2">
               <Input
                 label={isZh ? '数量' : 'Quantity'}
                 name="quantity"
-                type="number"
-                placeholder="1"
+                placeholder="Sample / 10-50 / 50-200 / 200+"
               />
-              <Input
-                label={isZh ? '目标价格' : 'Target Price'}
-                name="targetPrice"
-                type="number"
-                placeholder="$"
-              />
+              <Input label={isZh ? '目标价格' : 'Target Price'} name="targetPrice" type="number" placeholder="$" />
             </div>
 
             <Textarea
               label={isZh ? '详细需求 *' : 'Detailed Requirements *'}
               name="message"
               required
-              rows={5}
-              placeholder={isZh 
-                ? '请描述您的具体需求，包括应用场景、规格要求、交付时间等' 
-                : 'Please describe your specific requirements, including application scenario, specifications, delivery time, etc.'}
+              rows={6}
+              placeholder={
+                isZh
+                  ? '请填写 voltage, capacity, application, certification, OEM needs, destination country。例如：220V, 80L, apartment project, CE required, logo/package OEM, Chile.'
+                  : 'Please include voltage, capacity, application, certification, OEM needs, and destination country. Example: 220V, 80L, apartment project, CE required, logo/package OEM, Chile.'
+              }
             />
 
+            <p className="rounded-xl bg-orange-50 px-4 py-3 text-center text-sm font-medium text-orange-700">
+              {isZh ? '我们的销售团队会在 24 小时内回复。' : 'Our sales team will respond within 24 hours.'}
+            </p>
+
             <Button type="submit" size="lg" className="w-full" isLoading={isLoading}>
-              <Send className="w-5 h-5 mr-2" />
+              <Send className="mr-2 h-5 w-5" />
               {isZh ? '提交询盘' : 'Submit Inquiry'}
             </Button>
-
-            <p className="text-sm text-surface-500 text-center">
-              {isZh
-                ? '提交表示您同意我们的隐私政策和服务条款'
-                : 'By submitting, you agree to our Privacy Policy and Terms of Service'}
-            </p>
           </form>
         </motion.div>
 
-        {/* Contact Info */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mt-8 grid sm:grid-cols-3 gap-6"
-        >
-          <div className="bg-white rounded-xl p-6 text-center shadow-soft">
-            <h3 className="font-semibold text-surface-900 mb-2">
-              {isZh ? '电话' : 'Phone'}
-            </h3>
-            <p className="text-surface-600">+86 400-888-8888</p>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }} className="mt-8 grid gap-6 sm:grid-cols-3">
+          <div className="rounded-xl bg-white p-6 text-center shadow-soft">
+            <MessageCircle className="mx-auto mb-3 h-6 w-6 text-orange-500" />
+            <h3 className="mb-2 font-semibold text-surface-900">WhatsApp</h3>
+            <p className="text-sm text-surface-600">+86 400-888-8888</p>
           </div>
-          <div className="bg-white rounded-xl p-6 text-center shadow-soft">
-            <h3 className="font-semibold text-surface-900 mb-2">
-              {isZh ? '邮箱' : 'Email'}
-            </h3>
-            <p className="text-surface-600">sales@heatertech.com</p>
+          <div className="rounded-xl bg-white p-6 text-center shadow-soft">
+            <Mail className="mx-auto mb-3 h-6 w-6 text-orange-500" />
+            <h3 className="mb-2 font-semibold text-surface-900">{isZh ? '邮箱' : 'Email'}</h3>
+            <p className="break-words text-sm text-surface-600">sales@tramos-heating.com</p>
           </div>
-          <div className="bg-white rounded-xl p-6 text-center shadow-soft">
-            <h3 className="font-semibold text-surface-900 mb-2">
-              {isZh ? '工作时间' : 'Working Hours'}
-            </h3>
-            <p className="text-surface-600">Mon-Fri 9:00-18:00</p>
+          <div className="rounded-xl bg-white p-6 text-center shadow-soft">
+            <Clock className="mx-auto mb-3 h-6 w-6 text-orange-500" />
+            <h3 className="mb-2 font-semibold text-surface-900">{isZh ? '工作时间' : 'Working Hours'}</h3>
+            <p className="text-sm text-surface-600">Mon-Fri 9:00-18:00</p>
           </div>
         </motion.div>
       </div>

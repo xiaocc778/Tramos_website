@@ -1,63 +1,70 @@
 'use client';
 
+import { CheckCircle, PackageCheck, ShieldCheck, Wrench } from 'lucide-react';
 import { ScrollReveal } from '@/components/shared';
 
 interface TestimonialsSectionProps {
   isZh?: boolean;
 }
 
-const testimonials = [
+const buyerConcerns = [
   {
-    name: 'John Smith',
-    role: 'Operations Manager, ABC Hotels',
-    content: 'HeatTech has been an excellent partner for our hotel chain. Their products are reliable and the after-sales support is outstanding.',
-    contentZh: '热能科技是我们酒店集团的优秀合作伙伴。他们的产品可靠，售后服务也非常出色。',
+    icon: ShieldCheck,
+    title: 'Certification Fit',
+    titleZh: '认证适配',
+    content:
+      'We help buyers confirm the certification route, destination-market requirements, and documents needed before bulk production.',
+    contentZh: '协助采购商在批量生产前确认认证路径、目的地市场要求和所需资料。',
   },
   {
-    name: 'Sarah Chen',
-    role: 'CEO, Green Energy Co',
-    content: 'The solar water heaters have significantly reduced our energy costs. A game-changer for our business.',
-    contentZh: '太阳能热水器大幅降低了我们的能源成本。这改变了我们的业务。',
+    icon: PackageCheck,
+    title: 'Bulk Order Consistency',
+    titleZh: '批量一致性',
+    content:
+      'Product configuration, packaging, voltage, and spare parts can be aligned before sampling to reduce order risk.',
+    contentZh: '在打样阶段确认产品配置、包装、电压和备件，降低批量订单风险。',
   },
   {
-    name: 'Michael Brown',
-    role: 'Facility Director, Tech University',
-    content: "We serve 10,000+ students daily. HeatTech's commercial solutions handle the demand perfectly.",
-    contentZh: '我们每天为超过10,000名学生服务。热能科技的商业解决方案完美满足了需求。',
+    icon: Wrench,
+    title: 'Project Support',
+    titleZh: '项目支持',
+    content:
+      'For hotels, apartments, and facilities, we match product families to water demand, installation conditions, and maintenance access.',
+    contentZh: '针对酒店、公寓和设施项目，按用水需求、安装条件和维护便利性匹配产品系列。',
   },
 ];
 
 export function TestimonialsSection({ isZh = false }: TestimonialsSectionProps) {
   return (
-    <section className="py-20 bg-surface-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-surface-50 py-20">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="mb-16">
           <div className="text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-surface-900 mb-4">
-              {isZh ? '客户评价' : 'What Our Customers Say'}
+            <h2 className="mb-4 text-3xl font-bold text-surface-900 sm:text-4xl">
+              {isZh ? '我们解决的采购顾虑' : 'Buyer Concerns We Solve'}
             </h2>
-            <p className="text-lg text-surface-600 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-surface-600">
               {isZh
-                ? '来自全球客户的口碑反馈'
-                : 'Trusted by customers worldwide'}
+                ? '如果没有真实客户授权评价，就用更可核验的采购问题来建立信任。'
+                : 'Instead of unverified testimonials, we show the practical issues global buyers need solved.'}
             </p>
           </div>
         </ScrollReveal>
 
-        <div className="grid sm:grid-cols-3 gap-6">
-          {testimonials.map((t, index) => (
-            <ScrollReveal key={t.name} delay={index * 0.1}>
-              <div className="bg-white rounded-2xl p-6 shadow-soft h-full flex flex-col">
-                {/* Quote mark */}
-                <svg className="w-8 h-8 text-orange-200 mb-4" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h4v10h-10z" />
-                </svg>
-                <p className="text-surface-700 mb-6 flex-1 italic">
-                  &ldquo;{isZh ? t.contentZh : t.content}&rdquo;
+        <div className="grid gap-6 sm:grid-cols-3">
+          {buyerConcerns.map((item, index) => (
+            <ScrollReveal key={item.title} delay={index * 0.1}>
+              <div className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-soft">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100">
+                  <item.icon className="h-6 w-6 text-orange-600" />
+                </div>
+                <h3 className="mb-3 text-lg font-bold text-surface-900">{isZh ? item.titleZh : item.title}</h3>
+                <p className="flex-1 text-sm leading-6 text-surface-600">
+                  {isZh ? item.contentZh : item.content}
                 </p>
-                <div className="border-t border-surface-100 pt-4">
-                  <div className="font-semibold text-surface-900">{t.name}</div>
-                  <div className="text-sm text-surface-500">{t.role}</div>
+                <div className="mt-6 flex items-center gap-2 border-t border-surface-100 pt-4 text-sm font-medium text-orange-600">
+                  <CheckCircle className="h-4 w-4" />
+                  {isZh ? '询盘前可确认' : 'Confirm before ordering'}
                 </div>
               </div>
             </ScrollReveal>

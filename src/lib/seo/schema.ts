@@ -1,17 +1,20 @@
-import type { Product, Article } from '@/types';
+import type { Article, Product } from '@/types';
+
+const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://tramos-site.vercel.app';
 
 export function generateOrganizationSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'HeatTech Water Heaters',
-    alternateName: '热能科技',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com',
-    logo: `${process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com'}/logo.png`,
-    description: 'Leading manufacturer of water heaters including gas, electric, solar, and heat pump systems.',
+    name: 'Tramos',
+    alternateName: 'Tramos Water Heating',
+    url: baseUrl,
+    logo: `${baseUrl}/logo.png`,
+    description:
+      'Manufacturer of electric, gas, solar, heat pump, and commercial hot water systems for global B2B buyers.',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'RongGui Street, Shunde District',
+      streetAddress: 'Shunde District',
       addressLocality: 'Foshan',
       addressRegion: 'Guangdong',
       postalCode: '528300',
@@ -20,20 +23,14 @@ export function generateOrganizationSchema() {
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+86-400-888-8888',
+      email: 'sales@tramos-heating.com',
       contactType: 'sales',
       availableLanguage: ['English', 'Chinese'],
     },
-    sameAs: [
-      'https://www.facebook.com/heatertech',
-      'https://www.instagram.com/heatertech',
-      'https://www.linkedin.com/company/heatertech',
-    ],
   };
 }
 
 export function generateProductSchema(product: Product) {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com';
-
   return {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -44,20 +41,21 @@ export function generateProductSchema(product: Product) {
     url: `${baseUrl}/products/${product.slug}`,
     brand: {
       '@type': 'Brand',
-      name: 'HeatTech',
+      name: 'Tramos',
     },
     offers: {
       '@type': 'Offer',
       price: product.price,
       priceCurrency: 'USD',
-      availability: product.stock_status === 'in_stock'
-        ? 'https://schema.org/InStock'
-        : product.stock_status === 'low_stock'
-          ? 'https://schema.org/LowStock'
-          : 'https://schema.org/OutOfStock',
+      availability:
+        product.stock_status === 'in_stock'
+          ? 'https://schema.org/InStock'
+          : product.stock_status === 'low_stock'
+            ? 'https://schema.org/LowStock'
+            : 'https://schema.org/OutOfStock',
       seller: {
         '@type': 'Organization',
-        name: 'HeatTech Water Heaters',
+        name: 'Tramos',
       },
     },
   };
@@ -80,7 +78,7 @@ export function generateFAQSchema(faqs: Article[]) {
   return {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: faqs.map(faq => ({
+    mainEntity: faqs.map((faq) => ({
       '@type': 'Question',
       name: faq.title_en,
       acceptedAnswer: {
@@ -95,11 +93,11 @@ export function generateWebSiteSchema() {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'HeatTech Water Heaters',
-    url: process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com',
+    name: 'Tramos',
+    url: baseUrl,
     potentialAction: {
       '@type': 'SearchAction',
-      target: `${process.env.NEXT_PUBLIC_APP_URL || 'https://heatertech.com'}/products?search={search_term_string}`,
+      target: `${baseUrl}/products?search={search_term_string}`,
       'query-input': 'required name=search_term_string',
     },
   };

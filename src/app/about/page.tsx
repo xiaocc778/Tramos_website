@@ -1,135 +1,160 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Globe, Leaf, Zap, Shield } from 'lucide-react';
+import { Globe, Leaf, Shield, Zap } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { imageAssets } from '@/lib/assets';
 import { useUIStore } from '@/lib/ui-store';
+
+const stats = [
+  { num: '20+', label: 'Years Experience', labelZh: '年制造经验' },
+  { num: '50+', label: 'Export Markets', labelZh: '出口市场' },
+  { num: '100+', label: 'B2B Customers', labelZh: 'B2B 客户' },
+  { num: '500K+', label: 'Annual Capacity', labelZh: '年产能' },
+];
+
+const values = [
+  {
+    icon: Shield,
+    title: 'Quality First',
+    titleZh: '质量优先',
+    desc: 'Incoming inspection, production checks, and final testing help keep product quality consistent across bulk orders.',
+    descZh: '通过来料检验、过程巡检和出厂测试，保障批量订单的品质稳定。',
+  },
+  {
+    icon: Zap,
+    title: 'Practical R&D',
+    titleZh: '实用研发',
+    desc: 'We focus on safer heating structures, easier installation, energy efficiency, and market-ready OEM/ODM adaptation.',
+    descZh: '聚焦安全结构、安装便利性、能效优化，以及适合目标市场的 OEM/ODM 适配。',
+  },
+  {
+    icon: Globe,
+    title: 'Export Mindset',
+    titleZh: '出口协同',
+    desc: 'Our team supports buyers with certifications, packaging, documentation, and destination-market requirements.',
+    descZh: '协助采购商处理认证、包装、资料和目的地市场要求。',
+  },
+  {
+    icon: Leaf,
+    title: 'Efficient Heating',
+    titleZh: '高效节能',
+    desc: 'Electric, gas, solar, heat pump, and commercial systems can be matched to different budgets and energy conditions.',
+    descZh: '电、燃气、太阳能、热泵与商用系统可按预算、能源条件和场景灵活匹配。',
+  },
+];
 
 export default function AboutPage() {
   const { preferences } = useUIStore();
   const isZh = preferences.language === 'zh';
 
-  const stats = [
-    { num: '20+', label: isZh ? '年行业经验' : 'Years Experience', en: '20+' },
-    { num: '50+', label: isZh ? '出口国家' : 'Countries Exported', en: '50+' },
-    { num: '100+', label: isZh ? '企业客户' : 'Enterprise Clients', en: '100+' },
-    { num: '500K+', label: isZh ? '年产能（台）' : 'Annual Capacity', en: '500K+' },
-  ];
-
-  const values = [
-    { icon: Shield, title: isZh ? '品质第一' : 'Quality First', desc: isZh ? '严格的质量控制体系，确保每一台产品都达到国际标准' : 'Rigorous quality control ensures every product meets international standards' },
-    { icon: Zap, title: isZh ? '创新驱动' : 'Innovation Driven', desc: isZh ? '持续投入研发，拥有50+项专利技术' : 'Continuously invested in R&D with 50+ patents' },
-    { icon: Globe, title: isZh ? '全球视野' : 'Global Vision', desc: isZh ? '产品远销50+个国家和地区，深受国际客户信赖' : 'Products exported to 50+ countries, trusted globally' },
-    { icon: Leaf, title: isZh ? '绿色环保' : 'Eco-Friendly', desc: isZh ? '致力于节能减排，推动可持续发展' : 'Committed to energy saving and sustainable development' },
-  ];
-
   return (
     <div className="min-h-screen bg-surface-50">
       <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl font-bold text-white mb-4">
-              {isZh ? '关于我们' : 'About Us'}
+            <h1 className="mb-4 text-4xl font-bold text-white">
+              {isZh ? '关于 Tramos' : 'About Tramos'}
             </h1>
-            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-orange-200">
               {isZh
-                ? '专注热水器研发制造，为全球客户提供可靠的热水解决方案'
-                : 'Dedicated to water heater R&D and manufacturing, providing reliable hot water solutions for global customers'}
+                ? '专注热水器与商用热水系统制造，为全球采购商提供稳定供货、项目配套与 OEM/ODM 支持。'
+                : 'Focused on water heater and commercial hot water system manufacturing, with stable supply, project support, and OEM/ODM service for global buyers.'}
             </p>
           </motion.div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Stats */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-16 grid grid-cols-2 gap-6 lg:grid-cols-4">
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-white rounded-2xl p-6 text-center shadow-soft"
+              transition={{ delay: i * 0.08 }}
+              className="rounded-2xl bg-white p-6 text-center shadow-soft"
             >
-              <div className="text-3xl lg:text-4xl font-bold text-orange-500 mb-2">{s.num}</div>
-              <div className="text-surface-600 text-sm">{s.label}</div>
+              <div className="mb-2 text-3xl font-bold text-orange-500 lg:text-4xl">{s.num}</div>
+              <div className="text-sm text-surface-600">{isZh ? s.labelZh : s.label}</div>
             </motion.div>
           ))}
         </div>
 
-        {/* Story */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+        <div className="mb-16 grid items-center gap-12 lg:grid-cols-2">
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <img
-              src="/images/lifestyle/factory-production.jpg"
-              alt="Factory"
-              className="rounded-2xl shadow-soft"
-            />
+            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-soft">
+              <Image
+                src={imageAssets.lifestyle.factoryProduction}
+                alt={isZh ? 'Tramos 工厂生产场景' : 'Tramos factory production scene'}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+            </div>
           </motion.div>
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-            <h2 className="text-3xl font-bold text-surface-900 mb-4">
-              {isZh ? '我们的故事' : 'Our Story'}
+            <h2 className="mb-4 text-3xl font-bold text-surface-900">
+              {isZh ? '制造商，而不是模板卖场' : 'A Manufacturer, Not a Template Storefront'}
             </h2>
-            <p className="text-surface-600 mb-4 leading-relaxed">
+            <p className="mb-4 leading-relaxed text-surface-600">
               {isZh
-                ? '热能科技成立于2003年，是一家专业从事热水器研发、生产和销售的高新技术企业。公司总部位于广东省佛山市，拥有现代化生产基地和完善的质量管理体系。'
-                : 'Founded in 2003, HeatTech is a high-tech enterprise specializing in R&D, production, and sales of water heaters. Our headquarters and modern manufacturing base are located in Foshan, Guangdong.'}
+                ? 'Tramos 面向经销商、工程采购商、酒店公寓项目与品牌客户，提供电热水器、燃气热水器、太阳能热水系统、空气能热泵和商用热水系统。'
+                : 'Tramos serves distributors, project buyers, hotels, apartment operators, and brand partners with electric water heaters, gas water heaters, solar systems, heat pumps, and commercial hot water systems.'}
             </p>
-            <p className="text-surface-600 mb-4 leading-relaxed">
+            <p className="mb-4 leading-relaxed text-surface-600">
               {isZh
-                ? '20年来，我们始终坚持技术创新和品质优先，产品涵盖燃气热水器、电热水器、太阳能热水器、空气能热泵和商用锅炉等多个品类，广泛应用于家庭、酒店、医院、学校和工业领域。'
-                : 'For 20 years, we have adhered to technological innovation and quality priority. Our products cover gas water heaters, electric heaters, solar heaters, heat pumps, and commercial boilers, widely used in homes, hotels, hospitals, schools, and industry.'}
+                ? '我们更关注采购商真正需要核验的内容：产品系列是否完整、规格是否可落地、认证资料是否可配合、交期是否可控、售后资料是否清晰。'
+                : 'We focus on the proof global buyers need: complete product families, practical specifications, certification support, controlled lead times, and clear after-sales documentation.'}
             </p>
-            <p className="text-surface-600 leading-relaxed">
+            <p className="leading-relaxed text-surface-600">
               {isZh
-                ? '如今，我们的产品已出口到全球50多个国家和地区，与众多国际知名品牌建立了长期合作关系。'
-                : 'Today, our products are exported to more than 50 countries and regions worldwide, establishing long-term partnerships with many international brands.'}
+                ? '如果您需要批量采购、渠道合作或项目方案，Tramos 可以按容量、功率、电压、包装、认证和目的地市场进行适配。'
+                : 'For bulk sourcing, distribution, or project supply, Tramos can adapt capacity, power, voltage, packaging, certification, and destination-market requirements.'}
             </p>
           </motion.div>
         </div>
 
-        {/* Values */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-          <h2 className="text-2xl font-bold text-surface-900 mb-8 text-center">
-            {isZh ? '核心价值观' : 'Core Values'}
+        <motion.div id="certifications" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-16">
+          <h2 className="mb-8 text-center text-2xl font-bold text-surface-900">
+            {isZh ? '采购商关注的能力' : 'Capabilities Buyers Care About'}
           </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {values.map((v, i) => (
               <motion.div
                 key={v.title}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-6 shadow-soft text-center"
+                transition={{ delay: i * 0.08 }}
+                className="rounded-2xl bg-white p-6 text-center shadow-soft"
               >
-                <div className="w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
-                  <v.icon className="w-7 h-7 text-orange-600" />
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-100">
+                  <v.icon className="h-7 w-7 text-orange-600" />
                 </div>
-                <h3 className="font-bold text-surface-900 mb-2">{v.title}</h3>
-                <p className="text-surface-600 text-sm">{v.desc}</p>
+                <h3 className="mb-2 font-bold text-surface-900">{isZh ? v.titleZh : v.title}</h3>
+                <p className="text-sm text-surface-600">{isZh ? v.descZh : v.desc}</p>
               </motion.div>
             ))}
           </div>
         </motion.div>
 
-        {/* CTA */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 bg-orange-50 rounded-2xl p-8 text-center">
-          <h2 className="text-2xl font-bold text-surface-900 mb-4">
-            {isZh ? '想了解更多？' : 'Want to Know More?'}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="rounded-2xl bg-orange-50 p-8 text-center">
+          <h2 className="mb-4 text-2xl font-bold text-surface-900">
+            {isZh ? '需要确认产品或项目方案？' : 'Need to Confirm a Product or Project Plan?'}
           </h2>
-          <p className="text-surface-600 mb-6">
-            {isZh ? '浏览我们的产品或联系我们的专业团队' : 'Browse our products or contact our professional team'}
+          <p className="mb-6 text-surface-600">
+            {isZh
+              ? '把容量、电压、应用场景、认证和目的地国家发给我们，销售团队会在 24 小时内回复。'
+              : 'Share capacity, voltage, application, certification, and destination country. Our sales team will respond within 24 hours.'}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link href="/products">
-              <motion.button whileHover={{ scale: 1.05 }} className="bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-amber-600 transition-colors">
-                {isZh ? '浏览产品' : 'Browse Products'}
-              </motion.button>
+              <Button variant="secondary" size="lg">{isZh ? '浏览产品' : 'Browse Products'}</Button>
             </Link>
-            <Link href="/contact">
-              <motion.button whileHover={{ scale: 1.05 }} className="bg-white text-orange-600 px-8 py-3 rounded-xl font-medium border border-orange-200 hover:bg-orange-50 transition-colors">
-                {isZh ? '联系我们' : 'Contact Us'}
-              </motion.button>
+            <Link href="/inquiry">
+              <Button size="lg">{isZh ? '提交询盘' : 'Request Quote'}</Button>
             </Link>
           </div>
         </motion.div>

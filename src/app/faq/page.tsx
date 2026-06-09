@@ -1,139 +1,139 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronDown, ChevronUp, HelpCircle } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
-import { useFAQs } from '@/hooks';
-import type { Article } from '@/types';
 
-interface FAQItem {
-  id: string;
-  question: string;
-  answer: string;
-  question_zh?: string;
-  answer_zh?: string;
-  question_en?: string;
-  answer_en?: string;
-}
+const faqs = [
+  {
+    id: 'moq',
+    question: 'What is the MOQ?',
+    questionZh: '最小起订量是多少？',
+    answer:
+      'MOQ depends on the product family and customization level. Samples can usually be discussed first; distributor and OEM/ODM orders are quoted by model, packaging, and destination market.',
+    answerZh:
+      'MOQ 取决于产品系列和定制程度。通常可以先沟通样品；经销和 OEM/ODM 订单会按型号、包装和目的地市场单独报价。',
+  },
+  {
+    id: 'delivery',
+    question: 'What is the delivery time?',
+    questionZh: '交货期多久？',
+    answer:
+      'Sample and standard orders are normally faster than customized orders. Bulk lead time depends on quantity, current production schedule, packaging, and certification requirements.',
+    answerZh:
+      '样品和标准订单通常更快，定制订单需要更多准备时间。批量交期取决于数量、生产排期、包装和认证要求。',
+  },
+  {
+    id: 'oem',
+    question: 'Do you support OEM/ODM?',
+    questionZh: '是否支持 OEM/ODM？',
+    answer:
+      'Yes. Tramos can support logo, color, control panel, packaging, model configuration, voltage adaptation, and documentation for target markets.',
+    answerZh:
+      '支持。Tramos 可配合品牌标识、颜色、控制面板、包装、型号配置、电压适配，以及目标市场资料准备。',
+  },
+  {
+    id: 'certification',
+    question: 'Which certifications can be supported?',
+    questionZh: '可以支持哪些认证？',
+    answer:
+      'Certification depends on product type and destination market. Share the country, product category, and expected standard so our team can confirm the available route and documents.',
+    answerZh:
+      '认证取决于产品类型和目的地市场。请提供国家、产品分类和目标标准，我们会确认可支持的认证路径和资料。',
+  },
+  {
+    id: 'warranty',
+    question: 'What warranty do you provide?',
+    questionZh: '质保如何安排？',
+    answer:
+      'Warranty terms vary by product family, order type, and market requirements. For B2B orders, warranty parts, service documents, and after-sales process can be confirmed before production.',
+    answerZh:
+      '质保条款会因产品系列、订单类型和市场要求不同而变化。B2B 订单可在生产前确认备件、售后资料和服务流程。',
+  },
+  {
+    id: 'shipping',
+    question: 'Can you arrange shipping?',
+    questionZh: '是否可以安排运输？',
+    answer:
+      'We can support export documentation and coordinate shipping options. Freight cost is affected by order volume, destination, shipping method, and incoterms.',
+    answerZh:
+      '我们可支持出口资料并协助协调运输方案。运费取决于订单体积、目的地、运输方式和贸易条款。',
+  },
+  {
+    id: 'distributor',
+    question: 'How do I become a distributor?',
+    questionZh: '如何成为经销商？',
+    answer:
+      'Send your market, sales channel, preferred product families, estimated annual volume, and certification needs to sales@tramos-heating.com. Our team will review the cooperation fit.',
+    answerZh:
+      '请将市场区域、销售渠道、目标产品系列、预计年采购量和认证需求发送至 sales@tramos-heating.com，我们会评估合作适配度。',
+  },
+  {
+    id: 'support',
+    question: 'What technical support is available?',
+    questionZh: '可以提供哪些技术支持？',
+    answer:
+      'We can help with product selection, specification matching, installation documents, spare-part planning, and project quotation structure for commercial and OEM/ODM buyers.',
+    answerZh:
+      '可协助产品选型、规格匹配、安装资料、备件规划，以及商用和 OEM/ODM 采购所需的项目报价结构。',
+  },
+];
 
 export default function FAQPage() {
   const { preferences } = useUIStore();
   const isZh = preferences.language === 'zh';
-  const { data: faqs = [] } = useFAQs();
-  const [openId, setOpenId] = useState<string | null>(null);
-
-  const staticFAQs: FAQItem[] = [
-    {
-      id: '1',
-      question: isZh ? '最小起订量是多少？' : 'What is the minimum order quantity?',
-      answer: isZh
-        ? '我们的最小起订量根据产品类型而不同。家用产品通常1台起订，商用产品5台起订。B2B合作客户可以根据合同享受更灵活的起订量政策。'
-        : 'MOQ varies by product type. Usually 1 unit for home products and 5 units for commercial products. B2B partners enjoy more flexible MOQ policies under contract.',
-    },
-    {
-      id: '2',
-      question: isZh ? '交货期需要多长时间？' : 'How long is the delivery time?',
-      answer: isZh
-        ? '家用产品通常7-15个工作日，商用产品通常15-30个工作日。紧急订单可以支付加急费用缩短交货期。具体时间取决于订单数量和当前生产排期。'
-        : 'Home products typically 7-15 working days, commercial products 15-30 working days. Rush orders can pay an express fee to shorten delivery. Actual time depends on order quantity and production schedule.',
-    },
-    {
-      id: '3',
-      question: isZh ? '你们提供OEM/ODM服务吗？' : 'Do you offer OEM/ODM services?',
-      answer: isZh
-        ? '是的，我们提供全面的OEM和ODM服务，包括品牌定制、包装设计、产品功能定制、模具开发等。我们有丰富的国际品牌代工经验。'
-        : 'Yes, we offer full OEM and ODM services, including brand customization, packaging design, product feature customization, and mold development. We have extensive experience with international brand manufacturing.',
-    },
-    {
-      id: '4',
-      question: isZh ? '产品有哪些认证？' : 'What certifications do your products have?',
-      answer: isZh
-        ? '我们的产品已获得CE、CSA、ETL、SASO等国际认证，并通过了ISO9001质量管理体系认证。具体认证根据目标市场和产品类型而有所不同。'
-        : 'Our products have obtained CE, CSA, ETL, SASO and other international certifications, and passed ISO9001 quality management system certification. Specific certifications vary by target market and product type.',
-    },
-    {
-      id: '5',
-      question: isZh ? '产品质保期是多久？' : 'What is the product warranty period?',
-      answer: isZh
-        ? '家用产品享受5年质保，商用产品享受2年质保。质保期内因产品质量问题造成的损坏，我们提供免费维修或更换服务。'
-        : 'Home products have 5-year warranty, commercial products have 2-year warranty. During the warranty period, damage caused by product quality issues qualifies for free repair or replacement.',
-    },
-    {
-      id: '6',
-      question: isZh ? '运费如何计算？' : 'How are shipping costs calculated?',
-      answer: isZh
-        ? '运费根据订单重量、体积、目的地和运输方式计算。我们与多家国际物流公司合作，可以提供最具竞争力的运费报价。批量订单可协商免运费。'
-        : 'Shipping costs are calculated based on order weight, volume, destination, and shipping method. We partner with multiple international logistics companies to offer competitive rates. Bulk orders may qualify for free shipping.',
-    },
-    {
-      id: '7',
-      question: isZh ? '如何申请成为经销商？' : 'How do I apply to become a distributor?',
-      answer: isZh
-        ? '您可以通过填写询盘表单选择"B2B合作"类型，或直接发送邮件至 sales@heatertech.com。我们的B2B团队将在2个工作日内与您联系。'
-        : 'You can fill out our inquiry form selecting "B2B Partnership" or email sales@heatertech.com directly. Our B2B team will contact you within 2 working days.',
-    },
-    {
-      id: '8',
-      question: isZh ? '技术支持服务有哪些？' : 'What technical support services are available?',
-      answer: isZh
-        ? '我们提供全方位的技术支持，包括产品选型指导、安装调试支持、故障诊断和远程技术支持。B2B合作伙伴享有专属技术经理服务。'
-        : 'We provide comprehensive technical support including product selection guidance, installation and commissioning support, fault diagnosis, and remote technical assistance. B2B partners enjoy dedicated technical manager services.',
-    },
-  ];
-
-  const allFAQs: (FAQItem | Article)[] = faqs.length > 0 ? faqs : staticFAQs;
+  const [openId, setOpenId] = useState<string | null>('moq');
 
   return (
     <div className="min-h-screen bg-surface-50">
       <div className="bg-gradient-to-r from-[#1B2A4A] to-orange-700 py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-            <h1 className="text-4xl font-bold text-white mb-4">
+            <h1 className="mb-4 text-4xl font-bold text-white">
               {isZh ? '常见问题' : 'Frequently Asked Questions'}
             </h1>
-            <p className="text-orange-200 text-lg max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-orange-200">
               {isZh
-                ? '找到您关心的问题答案，如有更多疑问请随时联系我们'
-                : 'Find answers to your questions. Contact us anytime if you have more inquiries'}
+                ? '围绕 MOQ、交期、OEM/ODM、认证、质保、运输和技术支持的采购问题。'
+                : 'Buyer-focused answers about MOQ, delivery, OEM/ODM, certification, warranty, shipping, and technical support.'}
             </p>
           </motion.div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="space-y-4">
-          {allFAQs.map((faq, i) => {
-            const item = faq as FAQItem;
-            const art = faq as Article;
-            const question = ('question' in faq) ? (item.question_en || item.question) : art.title_en;
-            const answer = ('answer' in faq) ? (item.answer_en || item.answer) : art.content_en;
-            const displayQuestion = isZh ? (('question_zh' in faq && item.question_zh) ? item.question_zh : art.title_zh) : question;
-            const displayAnswer = isZh ? (('answer_zh' in faq && item.answer_zh) ? item.answer_zh : art.content_zh) : answer;
-            const id = ('id' in faq) ? item.id : String(i);
-
+          {faqs.map((faq, index) => {
+            const isOpen = openId === faq.id;
             return (
               <motion.div
-                key={id}
+                key={faq.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className="bg-white rounded-2xl shadow-soft overflow-hidden"
+                transition={{ delay: index * 0.04 }}
+                className="overflow-hidden rounded-2xl bg-white shadow-soft"
               >
                 <button
-                  onClick={() => setOpenId(openId === id ? null : id)}
-                  className="w-full flex items-center justify-between p-6 text-left hover:bg-surface-50 transition-colors"
+                  onClick={() => setOpenId(isOpen ? null : faq.id)}
+                  className="flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-surface-50"
+                  aria-expanded={isOpen}
                 >
-                  <span className="font-semibold text-surface-900 pr-4">{displayQuestion}</span>
-                  {openId === id ? (
-                    <ChevronUp className="w-5 h-5 text-orange-500 flex-shrink-0" />
+                  <span className="pr-4 font-semibold text-surface-900">
+                    {isZh ? faq.questionZh : faq.question}
+                  </span>
+                  {isOpen ? (
+                    <ChevronUp className="h-5 w-5 flex-shrink-0 text-orange-500" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-surface-400 flex-shrink-0" />
+                    <ChevronDown className="h-5 w-5 flex-shrink-0 text-surface-400" />
                   )}
                 </button>
-                {openId === id && (
+                {isOpen && (
                   <div className="px-6 pb-6">
-                    <p className="text-surface-600 leading-relaxed">{displayAnswer}</p>
+                    <p className="leading-relaxed text-surface-600">
+                      {isZh ? faq.answerZh : faq.answer}
+                    </p>
                   </div>
                 )}
               </motion.div>
@@ -141,26 +141,19 @@ export default function FAQPage() {
           })}
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mt-12 bg-orange-50 rounded-2xl p-8 text-center"
-        >
-          <HelpCircle className="w-10 h-10 text-orange-500 mx-auto mb-4" />
-          <h2 className="text-xl font-bold text-surface-900 mb-2">
-            {isZh ? '没找到答案？' : "Can't find what you're looking for?"}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-12 rounded-2xl bg-orange-50 p-8 text-center">
+          <HelpCircle className="mx-auto mb-4 h-10 w-10 text-orange-500" />
+          <h2 className="mb-2 text-xl font-bold text-surface-900">
+            {isZh ? '还有具体项目问题？' : "Can't find your project answer?"}
           </h2>
-          <p className="text-surface-600 mb-6">
+          <p className="mb-6 text-surface-600">
             {isZh
-              ? '我们的专业团队随时为您解答任何问题'
-              : 'Our professional team is ready to answer any questions'}
+              ? '把产品分类、容量、电压、认证和目的地国家发给我们，销售团队会在 24 小时内回复。'
+              : 'Send product category, capacity, voltage, certification, and destination country. Our sales team will respond within 24 hours.'}
           </p>
-          <a
-            href="/contact"
-            className="inline-block bg-gradient-to-r from-orange-500 to-amber-500 text-white px-8 py-3 rounded-xl font-medium hover:from-orange-600 hover:to-amber-600 transition-colors"
-          >
-            {isZh ? '联系我们' : 'Contact Us'}
-          </a>
+          <Link href="/inquiry" className="inline-block rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-8 py-3 font-medium text-white transition-colors hover:from-orange-600 hover:to-amber-600">
+            {isZh ? '提交询盘' : 'Request Quote'}
+          </Link>
         </motion.div>
       </div>
     </div>

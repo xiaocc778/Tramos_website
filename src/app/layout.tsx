@@ -1,24 +1,23 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { Providers } from "@/components/providers";
-import { generateOrganizationSchema, generateWebSiteSchema } from "@/lib/seo/schema";
+import type { Metadata } from 'next';
+import './globals.css';
+import { Footer } from '@/components/layout/footer';
+import { Header } from '@/components/layout/header';
+import { Providers } from '@/components/providers';
+import { generateOrganizationSchema, generateWebSiteSchema } from '@/lib/seo/schema';
 
 const siteConfig = {
-  name: 'HeatTech',
-  nameZh: '热能科技',
-  description: 'Professional water heater manufacturer. Premium water heaters, solar heaters, and boilers for global customers. B2B & B2C supported.',
-  descriptionZh: '专业热水器制造商。高品质热水器、太阳能热水器和锅炉，服务全球客户。支持B2B和B2C。',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'https://heater-shop.vercel.app',
-  keywords: 'water heater, solar water heater, gas heater, electric heater, heat pump, boiler, commercial heater, industrial heater',
-  keywordsZh: '热水器, 太阳能热水器, 燃气热水器, 电热水器, 空气能热泵, 锅炉, 商用热水器, 工业锅炉',
+  name: 'Tramos',
+  description:
+    'Professional water heater manufacturer for global buyers. Electric, gas, solar, heat pump, and commercial hot water systems with OEM/ODM support.',
+  url: process.env.NEXT_PUBLIC_APP_URL || 'https://tramos-site.vercel.app',
+  keywords:
+    'Tramos, water heater manufacturer, electric water heater, gas water heater, solar water heater, heat pump water heater, commercial hot water system, OEM ODM water heater',
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} - ${siteConfig.description.split('.')[0]}`,
+    default: `${siteConfig.name} - Professional Water Heater Manufacturer`,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
@@ -59,10 +58,7 @@ export const metadata: Metadata = {
   },
 };
 
-const jsonLdSchemas = [
-  generateOrganizationSchema(),
-  generateWebSiteSchema(),
-];
+const jsonLdSchemas = [generateOrganizationSchema(), generateWebSiteSchema()];
 
 export default function RootLayout({
   children,
@@ -71,7 +67,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
+      <body className="flex min-h-screen flex-col">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -80,9 +76,7 @@ export default function RootLayout({
         />
         <Providers>
           <Header />
-          <main className="flex-1 pt-16 lg:pt-20">
-            {children}
-          </main>
+          <main className="flex-1 pt-16 lg:pt-20">{children}</main>
           <Footer />
         </Providers>
       </body>

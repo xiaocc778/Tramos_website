@@ -2,6 +2,6 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Get in touch with HeatTech. Contact our sales team for product inquiries, B2B partnership, or technical support. Response within 24 hours.',
-  keywords: 'contact HeatTech, water heater inquiry, B2B contact, sales team, customer support',
+  description: 'Get in touch with Tramos. Contact our sales team for water heater inquiries, B2B partnership, project supply, or technical support.',
+  keywords: 'contact Tramos, water heater inquiry, B2B contact, sales team, technical support',
 };
