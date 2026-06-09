@@ -9,7 +9,7 @@ export function generateOrganizationSchema() {
     name: 'Tramos',
     alternateName: 'Tramos Water Heating',
     url: baseUrl,
-    logo: `${baseUrl}/logo.png`,
+    logo: `${baseUrl}/images/logo/3.png`,
     description:
       'Manufacturer of electric, gas, solar, heat pump, and commercial hot water systems for global B2B buyers.',
     address: {

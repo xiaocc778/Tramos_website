@@ -22,6 +22,13 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: siteConfig.keywords,
+  icons: {
+    icon: [
+      { url: '/images/logo/1.png', type: 'image/png' },
+    ],
+    shortcut: '/images/logo/1.png',
+    apple: '/images/logo/1.png',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -32,9 +39,9 @@ export const metadata: Metadata = {
     url: siteConfig.url,
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
+        url: '/images/logo/3.png',
+        width: 2048,
+        height: 512,
         alt: siteConfig.name,
       },
     ],
@@ -43,7 +50,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: siteConfig.name,
     description: siteConfig.description,
-    images: ['/og-image.png'],
+    images: ['/images/logo/3.png'],
   },
   robots: {
     index: true,

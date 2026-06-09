@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { useUIStore } from '@/lib/ui-store';
@@ -49,8 +50,14 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           <div>
-            <Link href="/" className="mb-4 inline-block text-2xl font-bold text-white">
-              Tramos
+            <Link href="/" className="mb-4 inline-flex rounded-lg bg-white px-3 py-2" aria-label="Tramos home">
+              <Image
+                src="/images/logo/3.png"
+                alt="Tramos"
+                width={170}
+                height={43}
+                className="h-9 w-auto object-contain"
+              />
             </Link>
             <p className="mb-6 max-w-xs text-gray-400">
               {isZh

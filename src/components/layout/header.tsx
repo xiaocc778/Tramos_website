@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ClipboardList, Globe, Menu, Moon, Sun, X } from 'lucide-react';
@@ -48,16 +49,15 @@ export function Header() {
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between lg:h-20">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-2xl font-bold text-orange-500">
-                <svg className="h-8 w-8 text-orange-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2C12 2 8 6 8 10C8 12.21 9.79 14 12 14C14.21 14 16 12.21 16 10C16 6 12 2 12 2Z" fill="currentColor" opacity="0.8" />
-                  <path d="M12 14C9.33 14 4 17 4 21H20C20 17 14.67 14 12 14Z" fill="currentColor" opacity="0.9" />
-                  <path d="M12 14C14.67 14 20 17 20 21H4C4 17 9.33 14 12 14Z" fill="currentColor" />
-                  <circle cx="12" cy="9" r="2" fill="#FFFDF9" opacity="0.6" />
-                </svg>
-              </span>
-              <span className="text-2xl font-bold text-orange-500">Tramos</span>
+            <Link href="/" className="flex items-center" aria-label="Tramos home">
+              <Image
+                src="/images/logo/3.png"
+                alt="Tramos"
+                width={180}
+                height={45}
+                priority
+                className="h-9 w-auto object-contain lg:h-11"
+              />
             </Link>
 
             <nav className="hidden items-center gap-1 lg:flex">
@@ -134,10 +134,16 @@ export function Header() {
             >
               <div className="flex h-full flex-col">
                 <div className="flex items-center justify-between border-b p-4">
-                  <Link href="/" onClick={() => setMobileOpen(false)} className="text-xl font-bold text-orange-500">
-                    Tramos
+                  <Link href="/" onClick={() => setMobileOpen(false)} className="flex items-center" aria-label="Tramos home">
+                    <Image
+                      src="/images/logo/3.png"
+                      alt="Tramos"
+                      width={150}
+                      height={38}
+                      className="h-8 w-auto object-contain"
+                    />
                   </Link>
-                  <button onClick={() => setMobileOpen(false)} className="p-2 text-surface-600 hover:text-orange-500">
+                  <button onClick={() => setMobileOpen(false)} className="p-2 text-surface-600 hover:text-orange-500" aria-label="Close menu">
                     <X className="h-6 w-6" />
                   </button>
                 </div>
