@@ -26,35 +26,35 @@ export function ArticleCard({
 
   return (
     <Link href={`/projects/${article.slug}`} className={`block ${className}`}>
-      <div className="group bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-soft-hover transition-all duration-300 h-full flex flex-col">
+      <div className="group flex h-full flex-col overflow-hidden rounded-md border border-surface-200 bg-white transition-colors duration-300 hover:border-surface-400">
         {imageUrl && (
-          <div className="aspect-video overflow-hidden relative bg-surface-100">
+          <div className="relative aspect-video overflow-hidden bg-surface-100">
             <Image
               src={imageUrl}
               alt={title}
               fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               unoptimized={imageUrl.startsWith('http')}
             />
           </div>
         )}
-        <div className="p-5 flex flex-col flex-1">
+        <div className="flex flex-1 flex-col p-5">
           {showDate && dateStr && (
-            <p className="text-xs text-surface-400 mb-2">
+            <p className="mb-2 text-xs text-surface-400">
               {new Date(dateStr).toLocaleDateString()}
             </p>
           )}
-          <h3 className="font-semibold text-surface-900 group-hover:text-orange-500 transition-colors mb-2 line-clamp-2">
+          <h3 className="mb-2 line-clamp-2 font-semibold text-surface-900 transition-colors group-hover:text-orange-700">
             {title}
           </h3>
           {excerpt && (
-            <p className="text-sm text-surface-500 line-clamp-3 flex-1 mb-3">
+            <p className="mb-3 line-clamp-3 flex-1 text-sm leading-6 text-surface-500">
               {excerpt}
             </p>
           )}
-          <div className="flex items-center gap-1 text-orange-500 text-sm font-medium mt-auto">
+          <div className="mt-auto flex items-center gap-1 text-sm font-semibold text-orange-700">
             {isZh ? '查看详情' : 'Read More'}
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="h-4 w-4" />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { Shield, Zap, Truck, CheckCircle } from 'lucide-react';
+import { CheckCircle, Shield, Truck, Zap } from 'lucide-react';
 import { ScrollReveal } from '@/components/shared';
 
 interface FeaturesSectionProps {
@@ -8,7 +8,7 @@ interface FeaturesSectionProps {
 }
 
 const features = [
-  { icon: Shield, label: 'ISO 9001 Certified', labelZh: 'ISO 9001认证' },
+  { icon: Shield, label: 'ISO 9001 Certified', labelZh: 'ISO 9001 认证' },
   { icon: Zap, label: 'Energy Efficient', labelZh: '节能高效' },
   { icon: Truck, label: 'Global Shipping', labelZh: '全球配送' },
   { icon: CheckCircle, label: '5-Year Warranty', labelZh: '五年质保' },
@@ -16,15 +16,19 @@ const features = [
 
 export function FeaturesSection({ isZh = false }: FeaturesSectionProps) {
   return (
-    <section className="py-8 bg-white border-b">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <section className="border-b border-surface-200 bg-white py-6">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 divide-y divide-surface-200 border-y border-surface-200 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
           {features.map((item, index) => (
-            <ScrollReveal key={item.label} delay={index * 0.08} className="flex items-center gap-3 p-4 rounded-xl hover:bg-surface-50 transition-colors">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                <item.icon className="w-5 h-5 text-orange-600" />
+            <ScrollReveal
+              key={item.label}
+              delay={index * 0.08}
+              className="flex items-center gap-3 px-4 py-5 transition-colors hover:bg-surface-50"
+            >
+              <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-surface-950 text-orange-300">
+                <item.icon className="h-4 w-4" />
               </div>
-              <span className="text-sm font-medium text-surface-700">
+              <span className="text-sm font-semibold text-surface-800">
                 {isZh ? item.labelZh : item.label}
               </span>
             </ScrollReveal>

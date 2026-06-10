@@ -25,7 +25,7 @@ export function SectionHeader({
   return (
     <div className={`${centered ? 'text-center' : ''} ${className}`}>
       <h2
-        className={`text-3xl sm:text-4xl font-bold mb-4 ${
+        className={`mb-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl ${
           light ? 'text-white' : 'text-surface-900'
         }`}
       >
@@ -33,8 +33,10 @@ export function SectionHeader({
       </h2>
       {displaySubtitle && (
         <p
-          className={`text-lg max-w-2xl mx-auto ${
-            light ? 'text-orange-200' : 'text-surface-600'
+          className={`max-w-2xl text-base leading-7 ${
+            centered ? 'mx-auto' : ''
+          } ${
+            light ? 'text-white/68' : 'text-surface-600'
           }`}
         >
           {displaySubtitle}

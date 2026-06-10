@@ -96,7 +96,7 @@ export function FeaturedProductsSection({ isZh = false }: FeaturedProductsSectio
                   className={cn(
                     'group grid w-full grid-cols-[72px_1fr] gap-4 rounded-md border p-3 text-left transition-all duration-300',
                     activeIndex === index
-                      ? 'border-orange-500 bg-orange-50 shadow-orange-soft'
+                      ? 'border-orange-500 bg-orange-50'
                       : 'border-surface-200 bg-white hover:border-orange-200 hover:bg-surface-50'
                   )}
                 >
@@ -129,7 +129,7 @@ export function FeaturedProductsSection({ isZh = false }: FeaturedProductsSectio
           <ScrollReveal direction="left">
             <div className="relative overflow-hidden rounded-md bg-surface-950 text-white">
               <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
-                <div className="relative min-h-[420px] overflow-hidden bg-surface-900">
+                <div className="relative min-h-[460px] overflow-hidden bg-surface-900">
                   <motion.div
                     key={activeImage}
                     initial={{ opacity: 0, scale: 1.04 }}

@@ -10,9 +10,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
     const variants = {
-      primary: 'bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 focus:ring-orange-500 shadow-soft hover:shadow-orange-hover btn-shimmer',
-      secondary: 'bg-white text-orange-600 border-2 border-orange-500 hover:bg-orange-50 focus:ring-orange-500',
-      ghost: 'bg-transparent text-surface-600 hover:bg-orange-50 hover:text-orange-600 focus:ring-orange-400',
+      primary: 'bg-orange-600 text-white hover:bg-orange-700 focus:ring-orange-500',
+      secondary: 'bg-white text-surface-950 border border-surface-300 hover:border-surface-950 hover:bg-surface-50 focus:ring-surface-500',
+      ghost: 'bg-transparent text-surface-700 hover:bg-surface-100 hover:text-surface-950 focus:ring-surface-400',
       danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500',
     };
     
@@ -25,7 +25,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={cn('inline-flex items-center justify-center font-medium transition-all duration-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed', variants[variant], sizes[size], className)}
+        className={cn('inline-flex items-center justify-center rounded-md font-semibold transition-[background-color,border-color,color,transform] duration-200 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0', variants[variant], sizes[size], className)}
         disabled={disabled || isLoading}
         {...props}
       >

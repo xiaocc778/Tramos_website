@@ -36,33 +36,34 @@ const buyerConcerns = [
 
 export function TestimonialsSection({ isZh = false }: TestimonialsSectionProps) {
   return (
-    <section className="bg-surface-50 py-20">
+    <section className="bg-white py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <ScrollReveal className="mb-16">
-          <div className="text-center">
-            <h2 className="mb-4 text-3xl font-bold text-surface-900 sm:text-4xl">
+        <ScrollReveal className="mb-12 grid gap-6 lg:grid-cols-[0.75fr_1.25fr] lg:items-end">
+          <div>
+            <p className="mb-4 border-l border-orange-500 pl-4 text-xs font-semibold uppercase tracking-[0.2em] text-orange-700">
+              {isZh ? '采购关注点' : 'Buyer concerns'}
+            </p>
+            <h2 className="text-3xl font-semibold leading-tight tracking-tight text-surface-950 sm:text-4xl">
               {isZh ? '我们解决的采购顾虑' : 'Buyer Concerns We Solve'}
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-surface-600">
-              {isZh
-                ? '如果没有真实客户授权评价，就用更可核验的采购问题来建立信任。'
-                : 'Instead of unverified testimonials, we show the practical issues global buyers need solved.'}
-            </p>
           </div>
+          <p className="max-w-2xl text-base leading-7 text-surface-600 lg:justify-self-end">
+            {isZh
+              ? '如果没有真实客户授权评价，就用更可核验的采购问题来建立信任。'
+              : 'Instead of unverified testimonials, we show the practical issues global buyers need solved.'}
+          </p>
         </ScrollReveal>
 
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="divide-y divide-surface-200 border-y border-surface-200">
           {buyerConcerns.map((item, index) => (
-            <ScrollReveal key={item.title} delay={index * 0.1}>
-              <div className="flex h-full flex-col rounded-2xl bg-white p-6 shadow-soft">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100">
-                  <item.icon className="h-6 w-6 text-orange-600" />
+            <ScrollReveal key={item.title} delay={index * 0.08}>
+              <div className="grid gap-5 py-7 transition-colors hover:bg-surface-50 sm:grid-cols-[44px_0.8fr_1.2fr_auto] sm:items-center sm:px-4">
+                <div className="flex h-10 w-10 items-center justify-center rounded-md bg-surface-950 text-orange-300">
+                  <item.icon className="h-5 w-5" />
                 </div>
-                <h3 className="mb-3 text-lg font-bold text-surface-900">{isZh ? item.titleZh : item.title}</h3>
-                <p className="flex-1 text-sm leading-6 text-surface-600">
-                  {isZh ? item.contentZh : item.content}
-                </p>
-                <div className="mt-6 flex items-center gap-2 border-t border-surface-100 pt-4 text-sm font-medium text-orange-600">
+                <h3 className="text-lg font-semibold text-surface-950">{isZh ? item.titleZh : item.title}</h3>
+                <p className="text-sm leading-6 text-surface-600">{isZh ? item.contentZh : item.content}</p>
+                <div className="inline-flex items-center gap-2 text-sm font-semibold text-orange-700">
                   <CheckCircle className="h-4 w-4" />
                   {isZh ? '询盘前可确认' : 'Confirm before ordering'}
                 </div>
