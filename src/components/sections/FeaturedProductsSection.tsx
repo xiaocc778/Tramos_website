@@ -18,7 +18,7 @@ const modelDetails = [
   {
     ...featuredModelAssets[0],
     tagline: 'Compact horizontal heater for apartments, kitchens, and OEM programs.',
-    taglineZh: '适合公寓、厨房和 OEM 项目的紧凑卧式热水器。',
+    taglineZh: '适合公寓、厨房和 OEM 项目的紧凑型卧式热水器。',
     specs: ['60L capacity', 'Digital display', 'Wall-mounted'],
     specsZh: ['60L 容量', '数字显示', '壁挂安装'],
     fit: 'Home / Apartment',
@@ -27,7 +27,7 @@ const modelDetails = [
   {
     ...featuredModelAssets[1],
     tagline: 'Slim instant heater with visible control panel and fast hot water delivery.',
-    taglineZh: '纤薄即热机型，配备可视化控制面板，快速供应热水。',
+    taglineZh: '纤薄即热机型，配备可视控制面板，快速供应热水。',
     specs: ['Instant heat', '6-8L/min', 'Compact body'],
     specsZh: ['即热供应', '6-8L/min', '紧凑机身'],
     fit: 'Kitchen / Utility',
@@ -94,7 +94,7 @@ export function FeaturedProductsSection({ isZh = false }: FeaturedProductsSectio
                     setActiveImageIndex(0);
                   }}
                   className={cn(
-                    'group grid w-full grid-cols-[72px_1fr] gap-4 rounded-lg border p-3 text-left transition-all duration-300',
+                    'group grid w-full grid-cols-[72px_1fr] gap-4 rounded-md border p-3 text-left transition-all duration-300',
                     activeIndex === index
                       ? 'border-orange-500 bg-orange-50 shadow-orange-soft'
                       : 'border-surface-200 bg-white hover:border-orange-200 hover:bg-surface-50'
@@ -127,7 +127,7 @@ export function FeaturedProductsSection({ isZh = false }: FeaturedProductsSectio
           </ScrollReveal>
 
           <ScrollReveal direction="left">
-            <div className="relative overflow-hidden rounded-lg bg-surface-950 text-white">
+            <div className="relative overflow-hidden rounded-md bg-surface-950 text-white">
               <div className="grid lg:grid-cols-[1.1fr_0.9fr]">
                 <div className="relative min-h-[420px] overflow-hidden bg-surface-900">
                   <motion.div
@@ -138,7 +138,7 @@ export function FeaturedProductsSection({ isZh = false }: FeaturedProductsSectio
                     className="absolute inset-0"
                   >
                     <Image
-                      src={active.image}
+                      src={activeImage}
                       alt={isZh ? active.titleZh : active.title}
                       fill
                       className="object-cover"
