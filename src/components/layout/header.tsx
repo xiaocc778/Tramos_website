@@ -25,28 +25,21 @@ const navItems: NavItem[] = [
 
 function TramosLogo({ compact = false }: { compact?: boolean }) {
   return (
-    <span className="inline-flex items-center gap-2" aria-hidden="true">
+    <span className="inline-flex items-center gap-2.5" aria-hidden="true">
       <svg
-        viewBox="0 0 64 48"
-        className={cn('h-8 w-11 text-surface-950', compact ? 'h-7 w-10' : 'lg:h-9 lg:w-12')}
+        viewBox="0 0 72 58"
+        className={cn('h-8 w-10 text-surface-950', compact ? 'h-7 w-9' : 'lg:h-9 lg:w-11')}
         role="img"
       >
-        <path
-          d="M7 10H27C30.4 10 33 12.6 33 16V20H20C12.8 20 7 15.1 7 10Z"
-          fill="currentColor"
-        />
-        <path
-          d="M57 10H37C33.6 10 31 12.6 31 16V20H44C51.2 20 57 15.1 57 10Z"
-          fill="currentColor"
-        />
-        <path d="M24 22H31V44C27 43.2 24 39.7 24 35.5V22Z" fill="currentColor" />
-        <path d="M33 22H40V35.5C40 39.7 37 43.2 33 44V22Z" fill="currentColor" />
-        <path d="M25 8H39L32 18L25 8Z" fill="#5B4BFF" />
+        <path d="M6 7H66L56 17H40V36L32 44L24 36V17H16L6 7Z" fill="currentColor" />
+        <path d="M16 20L32 36L48 20H62L34 49L16 31V45L6 55V20H16Z" fill="currentColor" />
+        <path d="M56 20H66V55L56 45V31L38 49L32 43L56 20Z" fill="currentColor" />
+        <path d="M27 17H45L36 28L27 17Z" fill="white" />
       </svg>
       <span
         className={cn(
-          'font-semibold lowercase tracking-[0.08em] text-surface-950',
-          compact ? 'text-xl' : 'text-2xl lg:text-[28px]'
+          'font-semibold lowercase tracking-[0.12em] text-surface-950',
+          compact ? 'text-xl' : 'text-2xl lg:text-[27px]'
         )}
       >
         tramos
